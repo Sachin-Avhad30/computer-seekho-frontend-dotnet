@@ -1,20 +1,23 @@
-import Hero from "../Components/Home/Hero";
 
+
+import Hero from "../Components/Home/Hero";
+import Courses from "../Components/Home/Courses";
 import WhyChoose from "../Components/Home/WhyChoose";
-import CourseOffered from "../Components/Home/CourseOffered";
 import PlacementHero from "../Components/Home/PlacementHero";
 import Recruiters from "../Components/Home/Recruiters";
+import OPDC from "./OPDC"; // ✅ correct import
 
-function Home() {
+const Home = () => {
   return (
     <>
-      <Hero></Hero>
-      <CourseOffered></CourseOffered>
-      <PlacementHero></PlacementHero>
-      <Recruiters></Recruiters>
-      <WhyChoose></WhyChoose>
+      <Hero />
+      <Courses />
+      <WhyChoose />
+      <PlacementHero />
+      <Recruiters />
     </>
   );
-}
+};
 
 export default Home;
+
