@@ -5,8 +5,8 @@ import Placement from "./Pages/Placement";
 import Courses from "./Pages/Courses";
 import CampusLife from "./Pages/CampusLife";
 import Faculty from "./Pages/Faculty";
-import Contact from "./Pages/Contact";
 import Footer from "./Components/Footer/Footer";
+import ContactSection from "./Pages/ContactSection";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
         <Route path="/courses" element={<Courses></Courses>} />
         <Route path="/campus-life" element={<CampusLife></CampusLife>} />
         <Route path="/faculty" element={<Faculty></Faculty>} />
-        <Route path="/contact" element={<Contact></Contact>} />
+        <Route path="/contact" element={<ContactSection></ContactSection>} />
       </Routes>
       <Footer></Footer>
     </>
