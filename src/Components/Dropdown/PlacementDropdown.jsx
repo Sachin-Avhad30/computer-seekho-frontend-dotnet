@@ -1,34 +1,50 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function PlacementDropdown({ label, items }) {
+export default function PlacementDropdown({ label, items }) {
   return (
-    <li className="relative group">
-      {/* Label */}
-      <span className="cursor-pointer hover:text-red-600">{label}</span>
-
-      {/* Dropdown menu */}
-      <ul
+    <div className="relative group">
+      {/* PLACEMENT (MATCHES OTHER NAV ITEMS) */}
+      <span
         className="
-          absolute top-full left-1/2 -translate-x-1/2 mt-2
-          w-56 bg-white shadow-lg border rounded-md py-2
-          hidden group-hover:block
+          px-4 py-2
+          text-sm font-normal text-[#0A2A66]
+          cursor-pointer
+          border-b-2 border-transparent
+          group-hover:border-[#0A2A66]
+        "
+      >
+        {label}
+      </span>
+
+      {/* DROPDOWN */}
+      <div
+        className="
+          absolute left-0 top-full
+          hidden
+          min-w-[260px]
+          bg-white
+          shadow-lg
+          rounded-md
+          group-hover:block
           z-50
         "
       >
-        {items.map((item) => (
-          <li key={item.to}>
-            <NavLink
-              to={item.to}
-              className="block px-4 py-2 text-sm text-gray-700
-                         hover:bg-gray-100 hover:text-red-600"
-            >
-              {item.label}
-            </NavLink>
-          </li>
+        {items.map((item, i) => (
+          <Link
+            key={i}
+            to={item.to}
+            className="
+              block
+              px-4 py-3
+              text-sm font-normal text-[#0A2A66]
+              border-b-2 border-transparent
+              hover:border-[#0A2A66]
+            "
+          >
+            {item.label}
+          </Link>
         ))}
-      </ul>
-    </li>
+      </div>
+    </div>
   );
 }
-
-export default PlacementDropdown;

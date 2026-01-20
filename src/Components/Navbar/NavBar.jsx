@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import PlacementDropdown from "../Dropdown/PlacementDropdown";
+import CoursesDropdown from "../Dropdown/CoursesDropdown";
 
 function Navbar() {
   return (
@@ -7,14 +8,15 @@ function Navbar() {
       <ul className="max-w-[1300px] mx-auto flex justify-center gap-8 py-4 text-sm font-semibold text-blue-900">
         <NavItem to="/">HOME</NavItem>
         <PlacementDropdown
-          label="PLACEMENT"
+          label="PLACEMENT" style={{fontWeight: "bold"}}
           items={[
             { label: "Batch Wise Placements", to: "/placement/batch-wise" },
             { label: "Our Recruiters", to: "/placement/recruiters" },
           ]}
         />
 
-        <NavItem to="/courses">COURSES</NavItem>
+        <CoursesDropdown />  
+
         <NavItem to="/campus-life">CAMPUS LIFE</NavItem>
         <NavItem to="/faculty">FACULTY</NavItem>
         <NavItem to="/pg-diploma">ONLINE PG DIPLOMA COURSES</NavItem>
