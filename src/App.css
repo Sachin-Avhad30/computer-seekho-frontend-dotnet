@@ -40,3 +40,36 @@
 .read-the-docs {
   color: #888;
 } */
+
+
+.campus-life-page {
+  padding: 2rem;
+  text-align: center;
+}
+
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.activity-card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.activity-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.activity-title {
+  margin-top: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
