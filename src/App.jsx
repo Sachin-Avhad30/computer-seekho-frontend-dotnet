@@ -8,6 +8,7 @@ import Faculty from "./Pages/Faculty";
 import OPDC from "./Pages/OPDC";
 import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
+import BatchWisePlacement from "./Components/BatchWisePlacement/BatchWisePlacement";
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
         <Route path="/pg-diploma" element={<OPDC />} />
         <Route path="/faculty" element={<Faculty></Faculty>} />
         <Route path="/contact" element={<ContactSection></ContactSection>} />
+        <Route
+          path="/placement/batch-wise"
+          element={<BatchWisePlacement></BatchWisePlacement>}
+        />
       </Routes>
       <Footer />
     </>
