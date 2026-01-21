@@ -5,7 +5,6 @@ import Placement from "./Pages/Placement";
 import Courses from "./Pages/Courses";
 import CampusLife from "./Pages/CampusLife";
 import Faculty from "./Pages/Faculty";
-import Contact from "./Pages/Contact";
 import OPDC from "./Pages/OPDC"; // ✅ ADD THIS
 import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
@@ -16,6 +15,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+  
         <Route path="/placement" element={<Placement />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/campus-life" element={<CampusLife />} />

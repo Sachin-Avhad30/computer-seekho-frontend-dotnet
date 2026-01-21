@@ -1,4 +1,4 @@
-import React from "react";
+
 
 import TheLab from "../assets/TheLab.jpg";
 import GuestLecture from "../assets/GuestLecture.jpg";
