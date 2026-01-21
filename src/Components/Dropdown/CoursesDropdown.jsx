@@ -1,25 +1,33 @@
 import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function CoursesDropdown() {
-  // 🔥 HARD CODED DATA (no useEffect, no async)
-  const courses = [
-    { id: 1, label: "PGCP-AC", to: "/courses/pgcp-ac" },
-    { id: 2, label: "PGCP-BDA", to: "/courses/pgcp-bda" },
-    { id: 3, label: "Pre CAT", to: "/courses/pre-cat" },
-  ];
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/courses")
+      .then((response) => {
+        setCourses(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }, []);
 
   return (
     <li className="relative group list-none">
       {/* COURSES label */}
-      <span className="relative cursor-pointer text-blue-900 font-semibold">
+      <span className="relative cursor-pointer text-blue-900 font-semibold inline-block">
         COURSES
-        <span className="absolute left-0 -bottom-3 w-full h-[2px] bg-red-600"></span>
+        <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-red-600"></span>
       </span>
 
       {/* DROPDOWN */}
       <ul
         className="
-          absolute left-0 top-full mt-4
+          absolute left-0 top-full
           w-64
           bg-white
           shadow-lg
@@ -28,20 +36,21 @@ function CoursesDropdown() {
           z-50
         "
       >
-        {courses.map(course => (
-          <li key={course.id}>
+        {courses.map((course) => (
+          <li key={course.courseId}>
             <NavLink
-              to={course.to}
+              to={`/courses/${course.courseName
+                .toLowerCase()
+                .replace(/\s+/g, "-")}`}
               className="
                 block
                 px-4 py-3
-                text-blue-900   /* FORCE COLOR */
+                text-blue-900
                 font-semibold
-                bg-white
                 hover:bg-blue-50
               "
             >
-              {course.label}
+              {course.courseName}
             </NavLink>
           </li>
         ))}
