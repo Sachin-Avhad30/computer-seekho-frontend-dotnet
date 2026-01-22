@@ -15,12 +15,13 @@ import PublicLayout from "./Components/Layout/PublicLayout";
 import Login from "./Components/Admin/Login";
 import ProtectedRoute from "./Components/Admin/ProtectedRoute";
 import AdminLayout from "./Components/Admin/AdminLayout";
-import FollowUp from "./Components/Admin/FollowUp ";
+import FollowUp from "./Components/Admin/FollowUp";
 import AddEnquiry from "./Components/Admin/AddEnquiry";
 import StudentRegistration from "./Components/Admin/StudentRegistration";
 import TableMaintenance from "./Components/Admin/TableMaintenance";
 import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
+import OAuthSuccess from "./Components/Admin/OAuthSuccess";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
 
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin/signup" element={<Signup />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
 
         <Route
           path="/admin"
@@ -54,7 +56,7 @@ function App() {
           }
         >
           <Route index element={<Navigate to="follow-up" replace />} />
-          <Route path="follow-up" element={<FollowUp />} />
+          <Route path="follow-up" element={<FollowUp/>} />
           <Route path="enquiry/add" element={<AddEnquiry />} />
           <Route
             path="student-registration"
