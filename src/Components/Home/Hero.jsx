@@ -1,25 +1,49 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import heroImage from "../../assets/hero.png";
 
 const Hero = () => {
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/announcements/active")
+      .then((response) => {
+        setAnnouncements(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching announcements:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div className="w-full flex flex-col items-center">
+      {/* Announcement Bar */}
       <div className="w-full bg-sky-50 overflow-hidden">
-        <div className="flex items-center gap-6 whitespace-nowrap px-4 py-2 animate-scroll-text min-w-max">
-          <span className="text-sm font-semibold">
-            Admissions Open for PreCAT, 15 Days Crash Course for CDAC's C-CAT
-            2026. Course starts from 15th December 2025. Available in Online &
-            Offline mode. Contact us on 90294 35311.
-          </span>
-
-          <button className="bg-black text-white px-4 py-1 rounded-md hover:bg-gray-800 transition shrink-0">
-            Register
-          </button>
+        <div className="flex items-center gap-8 whitespace-nowrap px-4 py-2 animate-scroll-text min-w-max">
+          {loading ? (
+            <span className="text-sm font-semibold">
+              Loading announcements...
+            </span>
+          ) : announcements.length > 0 ? (
+            announcements.map((text, index) => (
+              <span key={index} className="text-sm font-semibold text-gray-800">
+                {text}
+              </span>
+            ))
+          ) : (
+            <span className="text-sm font-semibold">
+              No announcements available
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Centered Hero Image (60% width) */}
+      {/* Hero Image */}
       <div className="w-full flex justify-center py-6">
         <img src={heroImage} alt="hero" className="w-[60%] object-contain" />
       </div>

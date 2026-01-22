@@ -10,6 +10,7 @@ import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
 import MoreRecruiters from "./Pages/MoreRecruiters";
 import CoursesDetails from "./Pages/CoursesDetails";
+import BatchWisePlacement from "./Components/BatchWisePlacement/BatchWisePlacement";
 
 function App() {
   return (
@@ -25,6 +26,10 @@ function App() {
         <Route path="/contact" element={<ContactSection></ContactSection>} />
         <Route path="/more-recruiters" element={<MoreRecruiters />} />
         <Route path="/courses/:slug" element={<CoursesDetails />} />
+        <Route
+          path="/placement/batch-wise"
+          element={<BatchWisePlacement></BatchWisePlacement>}
+        />
       </Routes>
       <Footer />
     </>

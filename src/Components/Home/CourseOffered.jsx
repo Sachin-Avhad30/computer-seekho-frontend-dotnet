@@ -1,24 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Courses from "./Courses";
 
 function CourseOffered() {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/courses/active")
+      .then((res) => {
+        setCourses(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching courses:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div className="bg-gray-50 py-16">
       <h2 className="text-4xl font-bold text-center mb-12">Courses Offered</h2>
 
       <div className="flex justify-center gap-10 flex-wrap">
-        <Courses
-          title="PGCP-AC"
-          description="PG Certificate Programme in Advanced Computing (PGCP-AC) grooms engineers and IT professionals for a career in Software Development."
-        />
-        <Courses
-          title="PGCP-BDA"
-          description="PG Certificate Programme in Big Data Analytics (PGCP-BDA) enables students to explore the fundamentals of big data analytics."
-        />
-        <Courses
-          title="Pre CAT"
-          description="Admission to all PG courses by C-DAC ACTS is through the All-India C-DAC Common Admission Test (C-CAT)."
-        />
+        {loading ? (
+          <p className="text-lg">Loading courses...</p>
+        ) : courses.length > 0 ? (
+          courses.map((course) => (
+            <Courses
+              key={course.courseId}
+              title={course.courseName}
+              description={course.courseDescription}
+            />
+          ))
+        ) : (
+          <p className="text-lg">No courses available</p>
+        )}
       </div>
     </div>
   );
