@@ -25,24 +25,6 @@ import Signup from "./Components/Admin/Signup";
 function App() {
   return (
     <>
-      {/* <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/placement" element={<Placement />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/campus-life" element={<CampusLife />} />
-        <Route path="/pg-diploma" element={<OPDC />} />
-        <Route path="/faculty" element={<Faculty></Faculty>} />
-        <Route path="/contact" element={<ContactSection></ContactSection>} />
-        <Route path="/more-recruiters" element={<MoreRecruiters />} />
-        <Route path="/courses/:slug" element={<CoursesDetails />} />
-        <Route
-          path="/placement/batch-wise"
-          element={<BatchWisePlacement></BatchWisePlacement>}
-        />
-      </Routes>
-      <Footer /> */}
-
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
@@ -52,6 +34,8 @@ function App() {
           <Route path="/pg-diploma" element={<OPDC />} />
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/contact" element={<ContactSection />} />
+          <Route path="/more-recruiters" element={<MoreRecruiters />} />
+          <Route path="/courses/:slug" element={<CoursesDetails />} />
           <Route
             path="/placement/batch-wise"
             element={<BatchWisePlacement />}
