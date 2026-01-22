@@ -10,7 +10,7 @@ const FacultyCard = ({ faculty }) => {
       <img
         src={imageUrl}
         alt={name}
-        className="w-full h-[550px] object-cover"
+        className="w-full h-137.5 object-cover"
       />
 
       {/* CONTENT */}
@@ -19,7 +19,7 @@ const FacultyCard = ({ faculty }) => {
           {name}
         </h3>
 
-        <p className="text-lg text-blue-600 font-medium mt-1">
+        <p className="text-lg text-blue-600 font-medium mt-1"> 
           {role}
         </p>
 

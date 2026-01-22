@@ -8,7 +8,7 @@ import Faculty from "./Pages/Faculty";
 import OPDC from "./Pages/OPDC";
 import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
-import BatchWisePlacement from "./Components/BatchWisePlacement/BatchWisePlacement";
+import PlacementAlbum from "./Pages/PlacementAlbum";
 
 function App() {
   return (
@@ -17,15 +17,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/placement" element={<Placement />} />
+        <Route path="/placement/:albumId" element={<PlacementAlbum />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/campus-life" element={<CampusLife />} />
         <Route path="/pg-diploma" element={<OPDC />} />
         <Route path="/faculty" element={<Faculty></Faculty>} />
         <Route path="/contact" element={<ContactSection></ContactSection>} />
-        <Route
-          path="/placement/batch-wise"
-          element={<BatchWisePlacement></BatchWisePlacement>}
-        />
+        
       </Routes>
       <Footer />
     </>

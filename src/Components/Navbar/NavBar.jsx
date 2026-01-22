@@ -5,12 +5,12 @@ import CoursesDropdown from "../Dropdown/CoursesDropdown";
 function Navbar() {
   return (
     <nav>
-      <ul className="max-w-[1300px] mx-auto flex justify-center gap-8 py-4 text-sm font-semibold text-blue-900">
+      <ul className="max-w-325 mx-auto flex justify-center gap-8 py-4 text-sm font-semibold text-blue-900">
         <NavItem to="/">HOME</NavItem>
         <PlacementDropdown
           label="PLACEMENT" style={{fontWeight: "bold"}}
           items={[
-            { label: "Batch Wise Placements", to: "/placement/batch-wise" },
+            { label: "Batch Wise Placements", to: "/placement" },
             { label: "Our Recruiters", to: "/placement/recruiters" },
           ]}
         />
@@ -41,7 +41,7 @@ function NavItem({ to, children }) {
         <>
           {children}
           {isActive && (
-            <span className="absolute left-0 -bottom-3 w-full h-[2px] bg-red-600"></span>
+            <span className="absolute left-0 -bottom-3 w-full h-0.5 bg-red-600"></span>
           )}
         </>
       )}
