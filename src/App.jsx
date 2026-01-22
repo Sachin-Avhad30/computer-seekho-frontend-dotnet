@@ -8,6 +8,7 @@ import Faculty from "./Pages/Faculty";
 import OPDC from "./Pages/OPDC";
 import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
+import PlacementAlbum from "./Pages/PlacementAlbum";
 import MoreRecruiters from "./Pages/MoreRecruiters";
 import CoursesDetails from "./Pages/CoursesDetails";
 import BatchWisePlacement from "./Components/BatchWisePlacement/BatchWisePlacement";
@@ -26,6 +27,15 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/placement" element={<Placement />} />
+        <Route path="/placement/:albumId" element={<PlacementAlbum />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/campus-life" element={<CampusLife />} />
+        <Route path="/pg-diploma" element={<OPDC />} />
+        <Route path="/faculty" element={<Faculty></Faculty>} />
+        <Route path="/contact" element={<ContactSection></ContactSection>} />
+        
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/placement" element={<Placement />} />
