@@ -8,52 +8,33 @@ function CoursesDropdown() {
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/courses")
-      .then((response) => {
-        setCourses(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-      });
+      .then((res) => setCourses(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
     <li className="relative group list-none">
-      {/* COURSES label */}
-      <span className="relative cursor-pointer text-blue-900 font-semibold inline-block">
+      <span className="cursor-pointer text-blue-900 font-semibold">
         COURSES
-        <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-red-600"></span>
       </span>
 
-      {/* DROPDOWN */}
-      <ul
-        className="
-          absolute left-0 top-full
-          w-64
-          bg-white
-          shadow-lg
-          rounded-md
-          hidden group-hover:block
-          z-50
-        "
-      >
-        {courses.map((course) => (
-          <li key={course.courseId}>
-            <NavLink
-              to={`/courses/${course.courseName
-                .toLowerCase()
-                .replace(/\s+/g, "-")}`}
-              className="
-                block
-                px-4 py-3
-                text-blue-900
-                font-semibold
-                hover:bg-blue-50
-              "
-            >
-              {course.courseName}
-            </NavLink>
-          </li>
-        ))}
+      <ul className="absolute top-full left-0 w-64 bg-white shadow-lg rounded-md hidden group-hover:block z-50">
+        {courses.map((course) => {
+          const slug = course.courseName
+            .toLowerCase()
+            .replace(/\s+/g, "-");
+
+          return (
+            <li key={course.courseId}>
+              <NavLink
+                to={`/courses/${slug}`}
+                className="block px-4 py-3 text-blue-900 font-semibold hover:bg-blue-50"
+              >
+                {course.courseName}
+              </NavLink>
+            </li>
+          );
+        })}
       </ul>
     </li>
   );
