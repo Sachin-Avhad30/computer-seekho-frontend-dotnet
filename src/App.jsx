@@ -8,6 +8,8 @@ import Faculty from "./Pages/Faculty";
 import OPDC from "./Pages/OPDC";
 import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
+import MoreRecruiters from "./Pages/MoreRecruiters";
+import CoursesDetails from "./Pages/CoursesDetails";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/pg-diploma" element={<OPDC />} />
         <Route path="/faculty" element={<Faculty></Faculty>} />
         <Route path="/contact" element={<ContactSection></ContactSection>} />
+        <Route path="/more-recruiters" element={<MoreRecruiters />} />
+        <Route path="/courses/:slug" element={<CoursesDetails />} />
       </Routes>
       <Footer />
     </>
