@@ -18,6 +18,10 @@ function Login() {
     });
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -106,6 +110,17 @@ function Login() {
             className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition transform hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
           >
             {loading ? "Logging in..." : "Login"}
+          </button>
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full mt-4 bg-white border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 shadow"
+          >
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            Login with Google
           </button>
         </form>
 
