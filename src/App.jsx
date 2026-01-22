@@ -11,7 +11,6 @@ import ContactSection from "./Pages/ContactSection";
 import PlacementAlbum from "./Pages/PlacementAlbum";
 import MoreRecruiters from "./Pages/MoreRecruiters";
 import CoursesDetails from "./Pages/CoursesDetails";
-import BatchWisePlacement from "./Components/BatchWisePlacement/BatchWisePlacement";
 import PublicLayout from "./Components/Layout/PublicLayout";
 import Login from "./Components/Admin/Login";
 import ProtectedRoute from "./Components/Admin/ProtectedRoute";
@@ -26,19 +25,11 @@ import Signup from "./Components/Admin/Signup";
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/placement" element={<Placement />} />
-        <Route path="/placement/:albumId" element={<PlacementAlbum />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/campus-life" element={<CampusLife />} />
-        <Route path="/pg-diploma" element={<OPDC />} />
-        <Route path="/faculty" element={<Faculty></Faculty>} />
-        <Route path="/contact" element={<ContactSection></ContactSection>} />
-        
+      <Routes>        
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/placement" element={<Placement />} />
+            <Route path="/placement/:albumId" element={<PlacementAlbum />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/campus-life" element={<CampusLife />} />
           <Route path="/pg-diploma" element={<OPDC />} />
@@ -46,10 +37,6 @@ function App() {
           <Route path="/contact" element={<ContactSection />} />
           <Route path="/more-recruiters" element={<MoreRecruiters />} />
           <Route path="/courses/:slug" element={<CoursesDetails />} />
-          <Route
-            path="/placement/batch-wise"
-            element={<BatchWisePlacement />}
-          />
         </Route>
 
         <Route path="/admin/login" element={<Login />} />
