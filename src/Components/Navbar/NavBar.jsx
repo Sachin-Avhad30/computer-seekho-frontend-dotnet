@@ -8,14 +8,15 @@ function Navbar() {
       <ul className="max-w-325 mx-auto flex justify-center gap-8 py-4 text-sm font-semibold text-blue-900">
         <NavItem to="/">HOME</NavItem>
         <PlacementDropdown
-          label="PLACEMENT" style={{fontWeight: "bold"}}
+          label="PLACEMENT"
+          style={{ fontWeight: "bold" }}
           items={[
             { label: "Batch Wise Placements", to: "/placement" },
-            { label: "Our Recruiters", to: "/placement/recruiters" },
+            { label: "Our Recruiters", to: "/more-recruiters" },
           ]}
         />
 
-        <CoursesDropdown />  
+        <CoursesDropdown />
 
         <NavItem to="/campus-life">CAMPUS LIFE</NavItem>
         <NavItem to="/faculty">FACULTY</NavItem>
