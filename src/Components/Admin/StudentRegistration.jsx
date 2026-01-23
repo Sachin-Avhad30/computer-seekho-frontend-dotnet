@@ -138,8 +138,7 @@ function StudentRegistration() {
           />
         </div>
 
-        {/* State */}
-        <div>
+        {/* State */}        <div>
           <label className="block font-medium mb-1">State</label>
           <input
             type="text"

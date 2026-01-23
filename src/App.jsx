@@ -6,7 +6,6 @@ import Courses from "./Pages/Courses";
 import CampusLife from "./Pages/CampusLife";
 import Faculty from "./Pages/Faculty";
 import OPDC from "./Pages/OPDC";
-import Footer from "./Components/Footer/Footer";
 import ContactSection from "./Pages/ContactSection";
 import PlacementAlbum from "./Pages/PlacementAlbum";
 import MoreRecruiters from "./Pages/MoreRecruiters";
@@ -15,13 +14,12 @@ import PublicLayout from "./Components/Layout/PublicLayout";
 import Login from "./Components/Admin/Login";
 import ProtectedRoute from "./Components/Admin/ProtectedRoute";
 import AdminLayout from "./Components/Admin/AdminLayout";
-import FollowUp from "./Components/Admin/FollowUp";
-import AddEnquiry from "./Components/Admin/AddEnquiry";
 import StudentRegistration from "./Components/Admin/StudentRegistration";
 import TableMaintenance from "./Components/Admin/TableMaintenance";
 import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
 import OAuthSuccess from "./Components/Admin/OAuthSuccess";
+import FollowUpDashboard from "./Pages/FollowUpDashboard";
 
 function App() {
   return (
@@ -53,8 +51,7 @@ function App() {
           }
         >
           <Route index element={<Navigate to="follow-up" replace />} />
-          <Route path="follow-up" element={<FollowUp/>} />
-          <Route path="enquiry/add" element={<AddEnquiry />} />
+          <Route path="follow-up" element={<FollowUpDashboard/>} />
           <Route
             path="student-registration"
             element={<StudentRegistration />}

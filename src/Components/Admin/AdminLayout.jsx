@@ -14,7 +14,6 @@ function AdminLayout() {
 
   const menuItems = [
     { path: "/admin/follow-up", label: "Follow Up", icon: "📋" },
-    { path: "/admin/enquiry/add", label: "Add Enquiry", icon: "➕" },
     {
       path: "/admin/student-registration",
       label: "Student Registration",
