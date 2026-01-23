@@ -18,7 +18,7 @@ import AdminLayout from "./Components/Admin/AdminLayout";
 import FollowUp from "./Components/Admin/FollowUp ";
 import AddEnquiry from "./Components/Admin/AddEnquiry";
 import StudentRegistration from "./Components/Admin/StudentRegistration";
-import TableMaintenance from "./Components/Admin/TableMaintenance";
+import TableMaintenance from "./Components/Admin/TableMaintanance/TableMaintenance";
 import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
 
