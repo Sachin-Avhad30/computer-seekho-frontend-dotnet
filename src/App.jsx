@@ -15,7 +15,7 @@ import Login from "./Components/Admin/Login";
 import ProtectedRoute from "./Components/Admin/ProtectedRoute";
 import AdminLayout from "./Components/Admin/AdminLayout";
 import StudentRegistration from "./Components/Admin/StudentRegistration";
-import TableMaintenance from "./Components/Admin/TableMaintenance";
+import TableMaintenance from "./Components/Admin/TableMaintanance/TableMaintenance";
 import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
 import OAuthSuccess from "./Components/Admin/OAuthSuccess";

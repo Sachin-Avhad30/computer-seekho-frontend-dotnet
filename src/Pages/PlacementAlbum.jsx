@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlacementAlbumImages } from "../PlacementApi";
+import { getPlacementAlbumImages } from "../Services/PlacementApi";
 
 const PlacementAlbum = () => {
   const { albumId } = useParams();
