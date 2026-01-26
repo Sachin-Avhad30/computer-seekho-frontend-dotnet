@@ -7,17 +7,15 @@ import {
   Youtube,
   ChevronUp,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const links = [
-    "Home",
-    "Placement",
-    "PGCP-AC",
-    "Campus Life",
-    "PGCP-BDA",
-    "Faculty",
-    "Pre C-CAT",
-    "Contact Us",
+    { name: "Home", path: "/" },
+    { name: "Placement", path: "/placement" },
+    { name: "Campus Life", path: "/campus-life" },
+    { name: "Faculty", path: "/faculty" },
+    { name: "Contact Us", path: "/contact" },
   ];
 
   const scrollToTop = () => {
@@ -34,14 +32,15 @@ const Footer = () => {
 
           <div className="grid grid-cols-2 gap-x-16 gap-y-3 text-sm">
             {links.map((link) => (
-              <a
-                key={link}
-                href="#"
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={scrollToTop}
                 className="flex items-center hover:text-white transition"
               >
                 <span className="mr-2 text-red-500">»</span>
-                {link}
-              </a>
+                {link.name}
+              </Link>
             ))}
           </div>
         </div>
@@ -92,7 +91,7 @@ const Footer = () => {
         </a>
       </div>
 
-      {/* SCROLL TO TOP — INSIDE FOOTER */}
+      {/* SCROLL TO TOP */}
       <button
         onClick={scrollToTop}
         className="absolute bottom-6 right-6 w-12 h-12 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition"

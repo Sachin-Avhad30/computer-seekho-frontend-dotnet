@@ -1,6 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false); // ✅ loading state
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true); // ✅ start loading
+
+    try {
+      const response = await fetch("http://localhost:8080/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.text();
+      alert(result);
+
+      // clear form after success
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to send message");
+    } finally {
+      setLoading(false); // ✅ stop loading
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="grid md:grid-cols-2 gap-10">
@@ -49,30 +95,47 @@ const ContactSection = () => {
             Get in Touch With Us !
           </h2>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="name"
               placeholder="Name*"
               className="w-full border px-4 py-2"
+              value={formData.name}
+              onChange={handleChange}
+              required
             />
 
             <input
               type="email"
+              name="email"
               placeholder="Email"
               className="w-full border px-4 py-2"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
 
             <textarea
+              name="message"
               placeholder="Message"
               rows="5"
               className="w-full border px-4 py-2"
+              value={formData.message}
+              onChange={handleChange}
+              required
             ></textarea>
 
             <button
               type="submit"
-              className="bg-red-600 text-white px-6 py-2 hover:bg-red-700"
+              disabled={loading}
+              className={`px-6 py-2 text-white ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700"
+              }`}
             >
-              SEND MESSAGE
+              {loading ? "Sending..." : "SEND MESSAGE"}
             </button>
           </form>
         </div>
@@ -82,3 +145,4 @@ const ContactSection = () => {
 };
 
 export default ContactSection;
+  

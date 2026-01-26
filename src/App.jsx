@@ -24,14 +24,14 @@ import FollowUpDashboard from "./Pages/FollowUpDashboard";
 function App() {
   return (
     <>
-      <Routes>        
+      <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/placement" element={<Placement />} />
-            <Route path="/placement/:albumId" element={<PlacementAlbum />} />
+          <Route path="/placement/:albumId" element={<PlacementAlbum />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/campus-life" element={<CampusLife />} />
-          <Route path="/pg-diploma" element={<OPDC />} />
+          {/* <Route path="/pg-diploma" element={<OPDC />} /> */}
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/contact" element={<ContactSection />} />
           <Route path="/more-recruiters" element={<MoreRecruiters />} />
@@ -51,7 +51,7 @@ function App() {
           }
         >
           <Route index element={<Navigate to="follow-up" replace />} />
-          <Route path="follow-up" element={<FollowUpDashboard/>} />
+          <Route path="follow-up" element={<FollowUpDashboard />} />
           <Route
             path="student-registration"
             element={<StudentRegistration />}

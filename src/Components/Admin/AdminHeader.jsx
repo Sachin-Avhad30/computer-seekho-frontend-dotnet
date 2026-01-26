@@ -32,7 +32,7 @@ import appLogo3 from "../../assets/CSlogo3.jpg";
 function AdminHeader() {
   const staffData = JSON.parse(localStorage.getItem("staff"));
 
-  const staffName = staffData?.staffName || "Sachin";
+  const staffName = staffData?.staffName || "Admin";
 
   const firstLetter = staffName.charAt(0).toUpperCase();
 

@@ -20,7 +20,7 @@ function Navbar() {
 
         <NavItem to="/campus-life">CAMPUS LIFE</NavItem>
         <NavItem to="/faculty">FACULTY</NavItem>
-        <NavItem to="/pg-diploma">ONLINE PG DIPLOMA COURSES</NavItem>
+        {/* <NavItem to="/pg-diploma">ONLINE PG DIPLOMA COURSES</NavItem> */}
         <NavItem to="/contact">GET IN TOUCH</NavItem>
       </ul>
     </nav>
