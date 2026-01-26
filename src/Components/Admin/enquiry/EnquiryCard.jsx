@@ -1,8 +1,8 @@
 import React from 'react';
-import { Phone, Calendar, User, BookOpen, Edit } from 'lucide-react';
+import { Phone, Calendar, User, BookOpen, Edit, UserPlus } from 'lucide-react';
 import { getStatusClass, getStatusTextClass, getStatusLabel, formatDate } from '../../../utils/helpers';
 
-const EnquiryCard = ({ enquiry, onCallClick, onEditClick }) => {
+const EnquiryCard = ({ enquiry, onCallClick, onEditClick, onRegisterClick }) => {
   return (
     <div
       className={`bg-white rounded-lg shadow hover:shadow-md transition p-4 border-l-4 ${getStatusClass(enquiry.followupDate)}`}
@@ -52,6 +52,13 @@ const EnquiryCard = ({ enquiry, onCallClick, onEditClick }) => {
               </span>
             ) : (
               <>
+                <button
+                  onClick={() => onRegisterClick(enquiry)}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition flex items-center gap-2 font-medium"
+                >
+                  <UserPlus size={18} />
+                  Register
+                </button>
                 <button
                   onClick={() => onEditClick(enquiry)}
                   className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition flex items-center gap-2 font-medium"

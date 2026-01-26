@@ -14,7 +14,6 @@ import PublicLayout from "./Components/Layout/PublicLayout";
 import Login from "./Components/Admin/Login";
 import ProtectedRoute from "./Components/Admin/ProtectedRoute";
 import AdminLayout from "./Components/Admin/AdminLayout";
-import StudentRegistration from "./Components/Admin/StudentRegistration";
 import TableMaintenance from "./Components/Admin/TableMaintenance";
 import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
@@ -52,10 +51,6 @@ function App() {
         >
           <Route index element={<Navigate to="follow-up" replace />} />
           <Route path="follow-up" element={<FollowUpDashboard/>} />
-          <Route
-            path="student-registration"
-            element={<StudentRegistration />}
-          />
           <Route path="table-maintenance" element={<TableMaintenance />} />
           <Route path="excel-upload" element={<ExcelUpload />} />
         </Route>
