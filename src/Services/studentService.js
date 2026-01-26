@@ -40,17 +40,32 @@ export const getAllBatches = async () => {
 };
 
 /**
- * Get batches by course
+ * Get active batches only
  */
-export const getBatchesByCourse = async (courseId) => {
+export const getActiveBatches = async () => {
   try {
-    const response = await batchApi.get(`/course/${courseId}`);
+    const response = await batchApi.get('/active');
     return response.data;
   } catch (error) {
-    console.error('Error fetching batches by course:', error);
+    console.error('Error fetching active batches:', error);
     throw error;
   }
 };
+
+/**
+ * Get batches by course - USE BACKEND ENDPOINT
+ */
+ export const getBatchesByCourse = async (courseId) => {
+    try {
+      // Use the dedicated backend endpoint instead of filtering on frontend
+      const response = await batchApi.get(`/course/${courseId}`);
+      console.log('Batches from backend for courseId:', courseId, response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching batches by course:', error);
+      throw error;
+    }
+  };
 
 /**
  * Get all students

@@ -41,14 +41,18 @@ const RegisterStudentModal = ({ enquiryId, onClose, onSuccess }) => {
     try {
       const enquiry = await getEnquiryById(enquiryId);
       
+      console.log('Fetched enquiry:', enquiry);
+      
       // Pre-fill from enquiry
       setFormData(prev => ({
         ...prev,
         studentName: enquiry.enquirerName || enquiry.studentName || '',
         studentMobile: enquiry.enquirerMobile || '',
         studentAddress: enquiry.enquirerAddress || '',
-        courseId: enquiry.course?.courseId || ''
+        courseId: enquiry.course?.courseId?.toString() || ''
       }));
+      
+      console.log('CourseId set to:', enquiry.course?.courseId);
     } catch (error) {
       alert('Error fetching enquiry details: ' + (error.response?.data?.message || error.message));
       onClose();
@@ -58,13 +62,23 @@ const RegisterStudentModal = ({ enquiryId, onClose, onSuccess }) => {
   };
 
   const fetchBatchesForCourse = async (courseId) => {
+    console.log('Fetching batches for courseId:', courseId);
     setLoadingBatches(true);
     try {
       const data = await getBatchesByCourse(courseId);
+      console.log('Received batches:', data);
+      console.log('Batches length:', data.length);
+      console.log('First batch:', data[0]);
       setBatches(data);
+      
+      if (data.length === 0) {
+        console.warn('No batches found for course:', courseId);
+        alert('No active batches found for this course. Please create a batch first.');
+      }
     } catch (error) {
       console.error('Error fetching batches:', error);
       setBatches([]);
+      alert('Error loading batches: ' + (error.response?.data?.message || error.message));
     } finally {
       setLoadingBatches(false);
     }
@@ -264,26 +278,33 @@ const RegisterStudentModal = ({ enquiryId, onClose, onSuccess }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Batch *
-              </label>
-              <select
-                value={formData.batchId}
-                onChange={(e) => handleChange('batchId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                required
-                disabled={loadingBatches}
-              >
-                <option value="">
-                  {loadingBatches ? 'Loading batches...' : 'Select Batch'}
-                </option>
-                {batches.map(batch => (
-                  <option key={batch.batchId} value={batch.batchId}>
-                    {batch.batchName} - {batch.batchYear}
-                  </option>
-                ))}
-              </select>
-            </div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Batch *
+  </label>
+  <select
+    value={formData.batchId}
+    onChange={(e) => handleChange('batchId', e.target.value)}
+    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+    required
+    disabled={loadingBatches}
+  >
+    <option value="">
+      {loadingBatches ? 'Loading batches...' : 'Select Batch'}
+    </option>
+    {batches && batches.length > 0 ? (
+      batches.map(batch => (
+        <option key={batch.batchId || batch.batch_id} value={batch.batchId || batch.batch_id}>
+          {batch.batchName || batch.batch_name}
+        </option>
+      ))
+    ) : (
+      <option disabled>No batches available</option>
+    )}
+  </select>
+  <p className="text-xs text-gray-500 mt-1">
+    Found {batches.length} batch(es)
+  </p>
+</div>
 
             {/* Login Credentials */}
             <div className="col-span-2 mt-4">
