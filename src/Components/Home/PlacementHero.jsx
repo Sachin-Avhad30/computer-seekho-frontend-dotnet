@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 const PlacementHero = () => {
+  const navigate = useNavigate();
   return (
     <section>
 
@@ -12,7 +14,9 @@ const PlacementHero = () => {
           className="w-full h-full object-cover"
         />
 
-        <button className="absolute top-1/4 left-1/2 -translate-x-1/2 bg-blue-900 text-white px-6 py-3 rounded">
+        <button 
+        onClick={() => navigate('/placement')}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 bg-blue-900 text-white px-6 py-3 rounded">
           See Batchwise Placements
         </button>
       </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPlacementAlbums } from "../PlacementApi";
+import { getPlacementAlbums } from "../Services/PlacementApi";
 
 function Placement() {
   const navigate = useNavigate();
