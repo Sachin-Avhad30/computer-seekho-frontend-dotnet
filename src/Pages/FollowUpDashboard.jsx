@@ -8,6 +8,7 @@ import EnquiryList from '../Components/Admin/enquiry/EnquiryList';
 import CallModal from '../Components/Admin/enquiry/CallModal';
 import AddEnquiryModal from '../Components/Admin/enquiry/AddEnquiryModal';
 import EditEnquiryModal from '../Components/Admin/enquiry/EditEnquiryModal';
+import RegisterStudentModal from '../Components/Admin/enquiry/RegisterStudentModal';
 import { getFollowupsForStaff, getAllFollowups } from '../Services/enquiryService';
 import { LOGGED_IN_STAFF_ID, VIEW_TYPES, FILTER_OPTIONS } from '../utils/constants';
 import { isPending, isToday } from '../utils/helpers';
@@ -20,7 +21,9 @@ const FollowUpDashboard = () => {
   const [showCallModal, setShowCallModal] = useState(false);
   const [showAddEnquiry, setShowAddEnquiry] = useState(false);
   const [showEditEnquiry, setShowEditEnquiry] = useState(false);
+  const [showRegisterStudent, setShowRegisterStudent] = useState(false);
   const [editEnquiryId, setEditEnquiryId] = useState(null);
+  const [registerEnquiryId, setRegisterEnquiryId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState(FILTER_OPTIONS.ALL);
 
@@ -56,6 +59,11 @@ const FollowUpDashboard = () => {
     setShowEditEnquiry(true);
   };
 
+  const handleRegisterClick = (enquiry) => {
+    setRegisterEnquiryId(enquiry.enquiryId);
+    setShowRegisterStudent(true);
+  };
+
   const handleCloseCallModal = () => {
     setShowCallModal(false);
     setSelectedEnquiry(null);
@@ -68,6 +76,11 @@ const FollowUpDashboard = () => {
   const handleCloseEditEnquiry = () => {
     setShowEditEnquiry(false);
     setEditEnquiryId(null);
+  };
+
+  const handleCloseRegisterStudent = () => {
+    setShowRegisterStudent(false);
+    setRegisterEnquiryId(null);
   };
 
   const handleSuccess = () => {
@@ -119,6 +132,7 @@ const FollowUpDashboard = () => {
             enquiries={filteredFollowups}
             onCallClick={handleCallClick}
             onEditClick={handleEditClick}
+            onRegisterClick={handleRegisterClick}
             loading={loading}
           />
         )}
@@ -143,6 +157,14 @@ const FollowUpDashboard = () => {
         <EditEnquiryModal
           enquiryId={editEnquiryId}
           onClose={handleCloseEditEnquiry}
+          onSuccess={handleSuccess}
+        />
+      )}
+
+      {showRegisterStudent && registerEnquiryId && (
+        <RegisterStudentModal
+          enquiryId={registerEnquiryId}
+          onClose={handleCloseRegisterStudent}
           onSuccess={handleSuccess}
         />
       )}

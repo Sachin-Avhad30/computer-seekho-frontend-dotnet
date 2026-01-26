@@ -11,14 +11,9 @@ function AdminLayout() {
     localStorage.removeItem("isAuthenticated");
     navigate("/admin/login");
   };
-
+  
   const menuItems = [
     { path: "/admin/follow-up", label: "Follow Up", icon: "📋" },
-    {
-      path: "/admin/student-registration",
-      label: "Student Registration",
-      icon: "👨‍🎓",
-    },
     {
       path: "/admin/table-maintenance",
       label: "Table Maintenance",

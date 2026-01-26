@@ -2,7 +2,7 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 import EnquiryCard from './EnquiryCard';
 
-const EnquiryList = ({ enquiries, onCallClick, onEditClick, loading }) => {
+const EnquiryList = ({ enquiries, onCallClick, onEditClick, onRegisterClick, loading }) => {
   if (loading) {
     return null; // Loading is handled by parent
   }
@@ -25,6 +25,7 @@ const EnquiryList = ({ enquiries, onCallClick, onEditClick, loading }) => {
           enquiry={enquiry}
           onCallClick={onCallClick}
           onEditClick={onEditClick}
+          onRegisterClick={onRegisterClick}
         />
       ))}
     </div>
