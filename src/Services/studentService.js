@@ -13,8 +13,26 @@ const batchApi = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
+const paymentApi = axios.create({
+  baseURL: `${API_BASE_URL}/payments`,
+  headers: { 'Content-Type': 'application/json' }
+});
+
 /**
- * Register student from enquiry
+ * Create payment (before student registration)
+ */
+export const createPayment = async (paymentData) => {
+  try {
+    const response = await paymentApi.post('/create', paymentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating payment:', error);
+    throw error;
+  }
+};
+
+/**
+ * Register student from enquiry (after payment)
  */
 export const registerStudent = async (registrationData) => {
   try {
@@ -53,19 +71,18 @@ export const getActiveBatches = async () => {
 };
 
 /**
- * Get batches by course - USE BACKEND ENDPOINT
+ * Get batches by course
  */
- export const getBatchesByCourse = async (courseId) => {
-    try {
-      // Use the dedicated backend endpoint instead of filtering on frontend
-      const response = await batchApi.get(`/course/${courseId}`);
-      console.log('Batches from backend for courseId:', courseId, response.data);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching batches by course:', error);
-      throw error;
-    }
-  };
+export const getBatchesByCourse = async (courseId) => {
+  try {
+    const response = await batchApi.get(`/course/${courseId}`);
+    console.log('Batches from backend for courseId:', courseId, response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching batches by course:', error);
+    throw error;
+  }
+};
 
 /**
  * Get all students
@@ -80,9 +97,38 @@ export const getAllStudents = async () => {
   }
 };
 
+/**
+ * Get all payments
+ */
+export const getAllPayments = async () => {
+  try {
+    const response = await paymentApi.get('');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get payments by student
+ */
+export const getPaymentsByStudent = async (studentId) => {
+  try {
+    const response = await paymentApi.get(`/student/${studentId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching payments for student:', error);
+    throw error;
+  }
+};
+
 export default {
+  createPayment,
   registerStudent,
   getAllBatches,
   getBatchesByCourse,
-  getAllStudents
+  getAllStudents,
+  getAllPayments,
+  getPaymentsByStudent
 };
