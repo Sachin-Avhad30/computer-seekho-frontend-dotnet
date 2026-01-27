@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Header from '../Components/Admin/common/Header';
-import Navigation from '../Components/Admin/common/Navigation';
-import SearchFilter from '../Components/Admin/common/SearchFilter';
-import Loading from '../Components/Admin/common/Loading';
-import EnquiryStats from '../Components/Admin/enquiry/EnquiryStats';
-import EnquiryList from '../Components/Admin/enquiry/EnquiryList';
-import CallModal from '../Components/Admin/enquiry/CallModal';
-import AddEnquiryModal from '../Components/Admin/enquiry/AddEnquiryModal';
-import EditEnquiryModal from '../Components/Admin/enquiry/EditEnquiryModal';
-import RegisterStudentModal from '../Components/Admin/enquiry/RegisterStudentModal';
-import { getFollowupsForStaff, getAllFollowups } from '../Services/enquiryService';
-import { LOGGED_IN_STAFF_ID, VIEW_TYPES, FILTER_OPTIONS } from '../utils/constants';
-import { isPending, isToday } from '../utils/helpers';
+import React, { useState, useEffect } from "react";
+import Header from "../Components/Admin/common/Header";
+import Navigation from "../Components/Admin/common/Navigation";
+import SearchFilter from "../Components/Admin/common/SearchFilter";
+import Loading from "../Components/Admin/common/Loading";
+import EnquiryStats from "../Components/Admin/enquiry/EnquiryStats";
+import EnquiryList from "../Components/Admin/enquiry/EnquiryList";
+import CallModal from "../Components/Admin/enquiry/CallModal";
+import AddEnquiryModal from "../Components/Admin/enquiry/AddEnquiryModal";
+import EditEnquiryModal from "../Components/Admin/enquiry/EditEnquiryModal";
+import RegisterStudentModal from "../Components/Admin/enquiry/RegisterStudentModal";
+import {
+  getFollowupsForStaff,
+  getAllFollowups,
+} from "../Services/enquiryService";
+import {
+  LOGGED_IN_STAFF_ID,
+  VIEW_TYPES,
+  FILTER_OPTIONS,
+} from "../utils/constants";
+import { isPending, isToday } from "../utils/helpers";
 
 const FollowUpDashboard = () => {
   const [activeView, setActiveView] = useState(VIEW_TYPES.MY_FOLLOWUPS);
@@ -24,7 +31,7 @@ const FollowUpDashboard = () => {
   const [showRegisterStudent, setShowRegisterStudent] = useState(false);
   const [editEnquiryId, setEditEnquiryId] = useState(null);
   const [registerEnquiryId, setRegisterEnquiryId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState(FILTER_OPTIONS.ALL);
 
   useEffect(() => {
@@ -36,14 +43,15 @@ const FollowUpDashboard = () => {
     try {
       let data;
       if (activeView === VIEW_TYPES.MY_FOLLOWUPS) {
+        console.log("Sachin", LOGGED_IN_STAFF_ID);
         data = await getFollowupsForStaff(LOGGED_IN_STAFF_ID);
       } else {
         data = await getAllFollowups();
       }
       setFollowups(data);
     } catch (error) {
-      console.error('Error fetching followups:', error);
-      alert('Error fetching follow-ups. Please check if backend is running.');
+      console.error("Error fetching followups:", error);
+      alert("Error fetching follow-ups. Please check if backend is running.");
     } finally {
       setLoading(false);
     }
@@ -88,10 +96,11 @@ const FollowUpDashboard = () => {
   };
 
   // Filter followups
-  const filteredFollowups = followups.filter(f => {
-    const matchesSearch = f.enquirerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         f.enquirerMobile?.toString().includes(searchTerm);
-    
+  const filteredFollowups = followups.filter((f) => {
+    const matchesSearch =
+      f.enquirerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      f.enquirerMobile?.toString().includes(searchTerm);
+
     if (filterStatus === FILTER_OPTIONS.PENDING) {
       return matchesSearch && isPending(f.followupDate);
     }
@@ -104,8 +113,8 @@ const FollowUpDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <Navigation 
+
+      <Navigation
         activeView={activeView}
         onViewChange={setActiveView}
         onAddEnquiry={() => setShowAddEnquiry(true)}

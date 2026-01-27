@@ -92,10 +92,10 @@
 // }
 
 // export default CoursesDetails;
-
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaClock, FaRupeeSign, FaUsers, FaCheckCircle } from "react-icons/fa";
 
 function CoursesDetails() {
   const { slug } = useParams();
@@ -103,7 +103,6 @@ function CoursesDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ Scroll to top when page loads
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     axios
@@ -112,14 +111,12 @@ function CoursesDetails() {
         const selectedCourse = res.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === slug,
         );
-
         setCourse(selectedCourse || null);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [slug]);
 
-  // ✅ Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -130,21 +127,21 @@ function CoursesDetails() {
     );
   }
 
-  // ✅ Course not found state
   if (!course) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-lg font-medium text-red-600">Course not found ❌</p>
+        <p className="text-lg font-medium text-red-600">Course not found</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 px-6 py-12">
-      {/* MAIN CARD */}
-      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl px-10 py-14">
+    // ✅ BACKGROUND CHANGED HERE
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-6 py-12">
+      {/* ✅ CARD STYLE IMPROVED */}
+      <div className="max-w-5xl mx-auto bg-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl px-10 py-14 border border-white/40">
         {/* TITLE */}
-        <h1 className="text-4xl font-extrabold text-blue-900 text-center mb-6">
+        <h1 className="text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {course.courseName}
         </h1>
 
@@ -160,34 +157,42 @@ function CoursesDetails() {
         {/* INFO GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Duration */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm">
-            <span className="font-semibold text-gray-700">Duration</span>
+          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-blue-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+            <span className="flex items-center gap-2 font-semibold text-gray-700">
+              <FaClock className="text-blue-600" /> Duration
+            </span>
             <span className="text-blue-900 font-bold">
               {course.courseDuration} Months
             </span>
           </div>
 
           {/* Fees */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm">
-            <span className="font-semibold text-gray-700">Fees</span>
+          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-green-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+            <span className="flex items-center gap-2 font-semibold text-gray-700">
+              <FaRupeeSign className="text-green-600" /> Fees
+            </span>
             <span className="text-blue-900 font-bold">
               ₹ {course.courseFees}
             </span>
           </div>
 
           {/* Age Group */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm">
-            <span className="font-semibold text-gray-700">Age Group</span>
+          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-purple-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+            <span className="flex items-center gap-2 font-semibold text-gray-700">
+              <FaUsers className="text-purple-600" /> Age Group
+            </span>
             <span className="text-gray-800 font-medium">
               {course.ageGrpType || "—"}
             </span>
           </div>
 
           {/* Status */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm">
-            <span className="font-semibold text-gray-700">Status</span>
+          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-yellow-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+            <span className="flex items-center gap-2 font-semibold text-gray-700">
+              <FaCheckCircle className="text-yellow-600" /> Status
+            </span>
             <span
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
+              className={`px-4 py-1.5 rounded-full text-sm font-semibold animate-pulse ${
                 course.courseIsActive
                   ? "bg-green-100 text-green-700"
                   : "bg-red-100 text-red-700"
@@ -196,6 +201,13 @@ function CoursesDetails() {
               {course.courseIsActive ? "Active" : "Inactive"}
             </span>
           </div>
+        </div>
+
+        {/* BUTTONS */}
+        <div className="flex justify-center gap-6 mt-12">
+          <button className="px-7 py-3 bg-gray-200 text-gray-800 rounded-xl font-semibold hover:bg-gray-300 transition">
+            Download Syllabus
+          </button>
         </div>
       </div>
     </div>
