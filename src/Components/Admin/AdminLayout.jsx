@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ClipboardList, Users, Wrench, FileSpreadsheet } from "lucide-react"; // ✅ Import icons
 import AdminHeader from "./AdminHeader";
 import AdminFooter from "./AdminFooter";
 
@@ -13,13 +14,10 @@ function AdminLayout() {
   };
   
   const menuItems = [
-    { path: "/admin/follow-up", label: "Follow Up", icon: "📋" },
-    {
-      path: "/admin/table-maintenance",
-      label: "Table Maintenance",
-      icon: "🔧",
-    },
-    { path: "/admin/excel-upload", label: "Excel Upload", icon: "📊" },
+    { path: "/admin/follow-up", label: "Follow Up", icon: ClipboardList },
+    { path: "/admin/registered-students", label: "Registered Students", icon: Users }, // ✅ NEW
+    { path: "/admin/table-maintenance", label: "Table Maintenance", icon: Wrench },
+    { path: "/admin/excel-upload", label: "Excel Upload", icon: FileSpreadsheet },
   ];
 
   return (
@@ -39,24 +37,27 @@ function AdminLayout() {
         </div>
 
         <nav className="mt-6">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center px-4 py-3 hover:bg-gray-700 transition ${
-                  isActive ? "bg-gray-700 border-l-4 border-blue-500" : ""
-                }`
-              }
-            >
-              <span className="text-2xl">{item.icon}</span>
-              {isSidebarOpen && <span className="ml-4">{item.label}</span>}
-            </NavLink>
-          ))}
+          {menuItems.map((item) => {
+            const Icon = item.icon; // ✅ Get icon component
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-3 hover:bg-gray-700 transition ${
+                    isActive ? "bg-gray-700 border-l-4 border-blue-500" : ""
+                  }`
+                }
+              >
+                <Icon size={24} /> {/* ✅ Render icon */}
+                {isSidebarOpen && <span className="ml-4">{item.label}</span>}
+              </NavLink>
+            );
+          })}
         </nav>
       </aside>
 
-      {/* ✅ MAIN CONTENT AREA (REPLACED PART) */}
+      {/* ✅ MAIN CONTENT AREA */}
       <div className="flex flex-col flex-1 bg-gray-50">
         <AdminHeader />
 
