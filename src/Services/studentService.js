@@ -85,14 +85,15 @@ export const getBatchesByCourse = async (courseId) => {
 };
 
 /**
- * Get all students
+ * Get all registered students with complete details
  */
-export const getAllStudents = async () => {
+ export const getAllRegisteredStudents = async () => {
   try {
-    const response = await studentApi.get('');
+    const response = await studentApi.get('/registered');
+    console.log('Registered students from backend:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching students:', error);
+    console.error('Error fetching registered students:', error);
     throw error;
   }
 };
@@ -128,7 +129,7 @@ export default {
   registerStudent,
   getAllBatches,
   getBatchesByCourse,
-  getAllStudents,
+  getAllRegisteredStudents ,
   getAllPayments,
   getPaymentsByStudent
 };

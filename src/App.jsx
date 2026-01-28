@@ -19,6 +19,7 @@ import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
 import OAuthSuccess from "./Components/Admin/OAuthSuccess";
 import FollowUpDashboard from "./Pages/FollowUpDashboard";
+import RegisteredStudentsPage from './Components/Admin/RegisteredStudents/RegisteredStudentsPage';
 
 function App() {
   return (
@@ -53,6 +54,8 @@ function App() {
           <Route path="follow-up" element={<FollowUpDashboard/>} />
           <Route path="table-maintenance" element={<TableMaintenance />} />
           <Route path="excel-upload" element={<ExcelUpload />} />
+          // Add this route:
+          <Route path="/admin/registered-students" element={<RegisteredStudentsPage />} />
         </Route>
       </Routes>
     </>
