@@ -37,17 +37,31 @@ export const downloadReceipt = async (receiptId) => {
  * Send receipt via email
  * TODO: Your friend will implement backend
  */
-export const sendReceipt = async (receiptId, email) => {
+// export const sendReceipt = async (receiptId, email) => {
+//   try {
+//     const response = await receiptApi.post(`/${receiptId}/send`, null, {
+//       params: { email }
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error sending receipt:', error);
+//     throw error;
+//   }
+// };
+
+
+export const sendReceipt = async (receiptId) => {
   try {
-    const response = await receiptApi.post(`/${receiptId}/send`, null, {
-      params: { email }
-    });
+    const response = await axios.get(
+      `${API_BASE_URL}/receipt/pdf/${receiptId}/email`
+    );
     return response.data;
   } catch (error) {
-    console.error('Error sending receipt:', error);
+    console.error("Error sending receipt:", error);
     throw error;
   }
 };
+
 
 /**
  * Get receipt details by ID
