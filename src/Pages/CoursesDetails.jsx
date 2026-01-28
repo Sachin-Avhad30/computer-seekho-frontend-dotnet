@@ -19,6 +19,7 @@ function CoursesDetails() {
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === slug,
         );
         setCourse(selectedCourse || null);
+        console.log(course.coverPhoto);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -51,6 +52,18 @@ function CoursesDetails() {
         <h1 className="text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {course.courseName}
         </h1>
+
+
+        {course.coverPhoto && (
+  <div className="flex justify-center mb-10">
+    <img
+      src={course.coverPhoto}
+      alt={course.courseName}
+      className="w-full max-w-3xl h-64 object-cover rounded-2xl shadow-lg"
+    />
+  </div>
+)}
+        
 
         {/* DESCRIPTION */}
         <p className="text-gray-600 text-lg leading-relaxed text-center max-w-3xl mx-auto mb-12">
