@@ -53,28 +53,31 @@ const ContactSection = () => {
         <div>
           <h2 className="text-2xl font-bold text-blue-900 mb-4">Our Origin</h2>
           <p className="text-gray-700 leading-relaxed">
-            We are a part of Upanagar Shikshan Mandal (USM), a pioneering
-            educational trust in the western suburbs of Mumbai. Commencing in
-            1956, USM has blossomed into educational institutes impacting
-            quality education from primary school to Post-Graduate courses.
+            Computer Seekho is a modern IT training institute dedicated to
+            empowering students with practical technical skills. Our mission is
+            to bridge the gap between academic learning and industry
+            requirements by providing hands-on training in the latest
+            technologies. We focus on building strong foundations, real-world
+            project experience, and career-oriented learning to help students
+            achieve their professional goals in the IT industry.
           </p>
         </div>
 
         <div>
           <h2 className="text-2xl font-bold text-blue-900 mb-4">Reach us at</h2>
           <p className="text-gray-700">
-            <strong>Authorized Training Centre</strong>
+            <strong>Computer Seekho - IT Training Institute</strong>
             <br />
-            5th Floor, Vidyanidhi Education Complex,
+            2nd Floor, Computer Seekho Learning Center,
             <br />
-            Vidyanidhi Road, Juhu Scheme Andheri (W),
+            Andheri (West), Mumbai, Maharashtra - 400058
             <br />
-            Mumbai 400 049 India
+            India
             <br />
             <br />
-            <strong>Mobile:</strong> 9829435311 / 9324095272 / 9987062416
+            <strong>Mobile:</strong> +91 98765 43210 / +91 9503369902
             <br />
-            <strong>Email:</strong> training@vidyanidhi.com
+            <strong>Email:</strong> support@sheekhocomputer@gmail.com
           </p>
         </div>
       </div>
@@ -92,7 +95,7 @@ const ContactSection = () => {
 
         <div>
           <h2 className="text-2xl font-bold text-blue-900 mb-4">
-            Get in Touch With Us !
+            Connect With Computer Seekho
           </h2>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -145,4 +148,3 @@ const ContactSection = () => {
 };
 
 export default ContactSection;
-  
