@@ -14,6 +14,11 @@ function Signup() {
     staffDesignation: "",
     staffBio: "",
   });
+  
+  // IMAGE STATES 🖼️
+  const [staffImage, setStaffImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,6 +30,40 @@ function Signup() {
     });
   };
 
+  // 📸 HANDLE IMAGE SELECTION
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    
+    if (file) {
+      // Validate file type
+      const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!validTypes.includes(file.type)) {
+        setError("Please select a valid image (JPG, JPEG, or PNG)");
+        return;
+      }
+
+      // Validate file size (5MB max)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        setError("Image size should be less than 5MB");
+        return;
+      }
+
+      // Set image and create preview
+      setStaffImage(file);
+      setImagePreview(URL.createObjectURL(file));
+      setError(""); // Clear any previous errors
+    }
+  };
+
+  // 🗑️ REMOVE IMAGE
+  const handleRemoveImage = () => {
+    setStaffImage(null);
+    setImagePreview(null);
+    // Reset file input
+    document.getElementById("staffImage").value = "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -32,7 +71,7 @@ function Signup() {
     setLoading(true);
 
     try {
-      const response = await authService.signup(formData);
+      const response = await authService.signup(formData, staffImage);
 
       console.log("Signup successful:", response);
       setSuccess(response.message);
@@ -43,7 +82,7 @@ function Signup() {
     } catch (err) {
       console.error("Signup error:", err);
       setError(
-        err.response?.data?.message || "Registration failed. Please try again.",
+        err.response?.data?.message || "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -73,6 +112,71 @@ function Signup() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* 🖼️ IMAGE UPLOAD SECTION */}
+          <div className="flex flex-col items-center mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Profile Picture
+            </label>
+            
+            {/* Image Preview */}
+            {imagePreview ? (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-purple-500 shadow-lg"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  disabled={loading}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition shadow-lg disabled:opacity-50"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-dashed border-gray-400">
+                <svg
+                  className="w-12 h-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </div>
+            )}
+
+            {/* File Input */}
+            <input
+              type="file"
+              id="staffImage"
+              name="staffImage"
+              accept="image/jpeg,image/jpg,image/png"
+              onChange={handleImageChange}
+              disabled={loading}
+              className="hidden"
+            />
+            
+            <label
+              htmlFor="staffImage"
+              className="mt-4 px-6 py-2 bg-purple-100 text-purple-700 rounded-lg cursor-pointer hover:bg-purple-200 transition font-semibold text-sm disabled:opacity-50"
+            >
+              {imagePreview ? "Change Photo" : "Upload Photo"}
+            </label>
+            
+            <p className="text-xs text-gray-500 mt-2">
+              JPG, JPEG, or PNG (Max 5MB)
+            </p>
+          </div>
+
+          {/* FORM FIELDS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
