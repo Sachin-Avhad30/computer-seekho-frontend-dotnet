@@ -17,9 +17,33 @@ const authService = {
     return response.data;
   },
 
-  // Signup
-  signup: async (signupData) => {
-    const response = await api.post("/auth/signup", signupData);
+  // 🚀 Signup WITH IMAGE UPLOAD (MULTIPART)
+  signup: async (signupData, staffImage) => {
+    // Create FormData for multipart/form-data
+    const formData = new FormData();
+    
+    // Append all text fields
+    formData.append("staffName", signupData.staffName);
+    formData.append("staffMobile", signupData.staffMobile);
+    formData.append("staffEmail", signupData.staffEmail);
+    formData.append("staffUsername", signupData.staffUsername);
+    formData.append("staffPassword", signupData.staffPassword);
+    formData.append("staffRole", signupData.staffRole);
+    formData.append("staffDesignation", signupData.staffDesignation || "");
+    formData.append("staffBio", signupData.staffBio || "");
+    
+    // Append image if exists
+    if (staffImage) {
+      formData.append("staffImage", staffImage);
+    }
+
+    // Send multipart request
+    const response = await api.post("/auth/signup", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    
     return response.data;
   },
 

@@ -281,6 +281,11 @@ function Signup() {
     staffBio: "",
     photoUrl: "", // Photo path will be stored here
   });
+  
+  // IMAGE STATES 🖼️
+  const [staffImage, setStaffImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -295,36 +300,38 @@ function Signup() {
     });
   };
 
-  const handleFileSelect = (e) => {
+  // 📸 HANDLE IMAGE SELECTION
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     
-    if (!file) return;
+    if (file) {
+      // Validate file type
+      const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!validTypes.includes(file.type)) {
+        setError("Please select a valid image (JPG, JPEG, or PNG)");
+        return;
+      }
 
-    if (!file.type.startsWith('image/')) {
-      setError('Please select an image file');
-      return;
+      // Validate file size (5MB max)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        setError("Image size should be less than 5MB");
+        return;
+      }
+
+      // Set image and create preview
+      setStaffImage(file);
+      setImagePreview(URL.createObjectURL(file));
+      setError(""); // Clear any previous errors
     }
-
-    setSelectedFile(file);
-    
-    // Construct path from filename
-    const fileName = file.name;
-    const photoPath = `/assets/staff/${fileName}`;
-    
-    setFormData({
-      ...formData,
-      photoUrl: photoPath
-    });
-    
-    console.log('Photo selected:', fileName);
-    console.log('Path set to:', photoPath);
   };
 
-  const handlePhotoPathChange = (e) => {
-    setFormData({
-      ...formData,
-      photoUrl: e.target.value
-    });
+  // 🗑️ REMOVE IMAGE
+  const handleRemoveImage = () => {
+    setStaffImage(null);
+    setImagePreview(null);
+    // Reset file input
+    document.getElementById("staffImage").value = "";
   };
 
   const handleSubmit = async (e) => {
@@ -334,8 +341,7 @@ function Signup() {
     setLoading(true);
 
     try {
-      console.log('Submitting signup with data:', formData);
-      const response = await authService.signup(formData);
+      const response = await authService.signup(formData, staffImage);
 
       console.log("Signup successful:", response);
       setSuccess(response.message);
@@ -346,7 +352,7 @@ function Signup() {
     } catch (err) {
       console.error("Signup error:", err);
       setError(
-        err.response?.data?.message || "Registration failed. Please try again.",
+        err.response?.data?.message || "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -376,140 +382,72 @@ function Signup() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
-              Basic Information
-            </h3>
+          {/* 🖼️ IMAGE UPLOAD SECTION */}
+          <div className="flex flex-col items-center mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Profile Picture
+            </label>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="staffName"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="staffName"
-                  name="staffName"
-                  value={formData.staffName}
-                  onChange={handleChange}
-                  placeholder="Enter full name"
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition disabled:bg-gray-100"
+            {/* Image Preview */}
+            {imagePreview ? (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-purple-500 shadow-lg"
                 />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="staffMobile"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Mobile Number *
-                </label>
-                <input
-                  type="tel"
-                  id="staffMobile"
-                  name="staffMobile"
-                  value={formData.staffMobile}
-                  onChange={handleChange}
-                  placeholder="Enter mobile number"
-                  required
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
                   disabled={loading}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition disabled:bg-gray-100"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="staffEmail"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition shadow-lg disabled:opacity-50"
                 >
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  id="staffEmail"
-                  name="staffEmail"
-                  value={formData.staffEmail}
-                  onChange={handleChange}
-                  placeholder="Enter email address"
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition disabled:bg-gray-100"
-                />
+                  ✕
+                </button>
               </div>
-
-              <div>
-                <label
-                  htmlFor="staffUsername"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-dashed border-gray-400">
+                <svg
+                  className="w-12 h-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  Username *
-                </label>
-                <input
-                  type="text"
-                  id="staffUsername"
-                  name="staffUsername"
-                  value={formData.staffUsername}
-                  onChange={handleChange}
-                  placeholder="Choose username"
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition disabled:bg-gray-100"
-                />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
               </div>
-            </div>
+            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="staffPassword"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Password *
-                </label>
-                <input
-                  type="password"
-                  id="staffPassword"
-                  name="staffPassword"
-                  value={formData.staffPassword}
-                  onChange={handleChange}
-                  placeholder="Create password (min 6 chars)"
-                  minLength="6"
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition disabled:bg-gray-100"
-                />
-              </div>
+            {/* File Input */}
+            <input
+              type="file"
+              id="staffImage"
+              name="staffImage"
+              accept="image/jpeg,image/jpg,image/png"
+              onChange={handleImageChange}
+              disabled={loading}
+              className="hidden"
+            />
+            
+            <label
+              htmlFor="staffImage"
+              className="mt-4 px-6 py-2 bg-purple-100 text-purple-700 rounded-lg cursor-pointer hover:bg-purple-200 transition font-semibold text-sm disabled:opacity-50"
+            >
+              {imagePreview ? "Change Photo" : "Upload Photo"}
+            </label>
+            
+            <p className="text-xs text-gray-500 mt-2">
+              JPG, JPEG, or PNG (Max 5MB)
+            </p>
+          </div>
 
-              <div>
-                <label
-                  htmlFor="staffRole"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Staff Role *
-                </label>
-                <select
-                  id="staffRole"
-                  name="staffRole"
-                  value={formData.staffRole}
-                  onChange={handleChange}
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition disabled:bg-gray-100"
-                >
-                  <option value="teaching">Teaching</option>
-                  <option value="non-teaching">Non-Teaching</option>
-                </select>
-              </div>
-            </div>
-
+          {/* FORM FIELDS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="staffDesignation"
