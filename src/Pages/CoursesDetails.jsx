@@ -1,13 +1,15 @@
-// export default CoursesDetails;
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaClock, FaRupeeSign, FaUsers, FaCheckCircle } from "react-icons/fa";
+import { FaClock, FaRupeeSign, FaUsers, FaFileAlt, FaInfoCircle } from "react-icons/fa";
+import {useNavigate } from "react-router-dom";
 
 function CoursesDetails() {
   const { slug } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -19,7 +21,9 @@ function CoursesDetails() {
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === slug,
         );
         setCourse(selectedCourse || null);
-        console.log(course.coverPhoto);
+        if (selectedCourse) {
+          console.log(selectedCourse);
+        }
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -44,89 +48,98 @@ function CoursesDetails() {
   }
 
   return (
-    // ✅ BACKGROUND CHANGED HERE
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-6 py-12">
-      {/* ✅ CARD STYLE IMPROVED */}
       <div className="max-w-5xl mx-auto bg-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl px-10 py-14 border border-white/40">
         {/* TITLE */}
-        <h1 className="text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {course.courseName}
         </h1>
 
+        {/* COVER PHOTO */}
+        {course.coverPhoto && course.coverPhoto.trim() !== "" && (
+          <div className="flex justify-center mb-10">
+            <img
+              src={course.coverPhoto}
+              alt={course.courseName}
+              className="w-full max-w-3xl h-64 object-cover rounded-2xl shadow-lg"
+            />
+          </div>
+        )}
 
-        {course.coverPhoto && (
-  <div className="flex justify-center mb-10">
-    <img
-      src={course.coverPhoto}
-      alt={course.courseName}
-      className="w-full max-w-3xl h-64 object-cover rounded-2xl shadow-lg"
-    />
-  </div>
-)}
-        
-
-        {/* DESCRIPTION */}
-        <p className="text-gray-600 text-lg leading-relaxed text-center max-w-3xl mx-auto mb-12">
-          <span className="font-semibold text-blue-900">
-            {course.courseName}
-          </span>{" "}
-          focuses on data engineering, analytics, and machine learning,
-          equipping learners with industry-ready skills.
-        </p>
+        {/* DESCRIPTION SECTION */}
+        {course.courseDescription && course.courseDescription.trim() !== "" && (
+          <div className="max-w-3xl mx-auto mb-10">
+            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-8 shadow-md border border-indigo-100">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <FaInfoCircle className="text-indigo-600" />
+                Course Description
+              </h2>
+              <p className="text-gray-700 text-lg leading-relaxed text-justify">
+                {course.courseDescription}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* INFO GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto mb-10">
           {/* Duration */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-blue-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
-            <span className="flex items-center gap-2 font-semibold text-gray-700">
-              <FaClock className="text-blue-600" /> Duration
-            </span>
-            <span className="text-blue-900 font-bold">
-              {course.courseDuration} Months
-            </span>
-          </div>
+          {course.courseDuration && (
+            <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-blue-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+              <span className="flex items-center gap-2 font-semibold text-gray-700">
+                <FaClock className="text-blue-600" /> Duration
+              </span>
+              <span className="text-blue-900 font-bold">
+                {course.courseDuration} {course.courseDuration === 1 ? 'Month' : 'Months'}
+              </span>
+            </div>
+          )}
 
           {/* Fees */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-green-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
-            <span className="flex items-center gap-2 font-semibold text-gray-700">
-              <FaRupeeSign className="text-green-600" /> Fees
-            </span>
-            <span className="text-blue-900 font-bold">
-              ₹ {course.courseFees}
-            </span>
-          </div>
+          {course.courseFees && (
+            <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-green-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+              <span className="flex items-center gap-2 font-semibold text-gray-700">
+                <FaRupeeSign className="text-green-600" /> Fees
+              </span>
+              <span className="text-blue-900 font-bold">
+                ₹ {course.courseFees.toLocaleString('en-IN')}
+              </span>
+            </div>
+          )}
 
           {/* Age Group */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-purple-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
-            <span className="flex items-center gap-2 font-semibold text-gray-700">
-              <FaUsers className="text-purple-600" /> Age Group
-            </span>
-            <span className="text-gray-800 font-medium">
-              {course.ageGrpType || "—"}
-            </span>
-          </div>
-
-          {/* Status */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-yellow-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
-            <span className="flex items-center gap-2 font-semibold text-gray-700">
-              <FaCheckCircle className="text-yellow-600" /> Status
-            </span>
-            <span
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold animate-pulse ${
-                course.courseIsActive
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {course.courseIsActive ? "Active" : "Inactive"}
-            </span>
-          </div>
+          {course.ageGrpType && course.ageGrpType.trim() !== "" && (
+            <div className="flex items-center justify-between bg-gray-50 rounded-xl px-6 py-4 shadow-sm border-l-4 border-purple-500 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-white">
+              <span className="flex items-center gap-2 font-semibold text-gray-700">
+                <FaUsers className="text-purple-600" /> Age Group
+              </span>
+              <span className="text-gray-800 font-medium">
+                {course.ageGrpType}
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* BUTTONS */}
-        <div className="flex justify-center gap-6 mt-12">
-          <button className="px-7 py-3 bg-gray-200 text-gray-800 rounded-xl font-semibold hover:bg-gray-300 transition">
-            Download Syllabus
+        {/* SYLLABUS SECTION */}
+        {course.courseSyllabus && course.courseSyllabus.trim() !== "" && (
+          <div className="max-w-3xl mx-auto mb-10">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 shadow-md border border-blue-100">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <FaFileAlt className="text-blue-600" />
+                Course Syllabus
+              </h2>
+              <div className="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">
+                {course.courseSyllabus}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ENROLL BUTTON */}
+        <div className="flex justify-center mt-12">
+          <button  onClick={() => navigate("/contact")}
+          className="px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+            Enroll Now
           </button>
         </div>
       </div>
