@@ -22,7 +22,7 @@ const ContactSection = () => {
     setLoading(true); // ✅ start loading
 
     try {
-      const response = await fetch("http://localhost:8080/api/email", {
+      const response = await fetch("https://localhost:7018/api/Email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

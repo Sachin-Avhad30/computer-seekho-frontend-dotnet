@@ -21,7 +21,7 @@ function CoursesDetails() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     axios
-      .get("http://localhost:8080/api/courses")
+      .get("https://localhost:7018/api/courses")
       .then((res) => {
         const selectedCourse = res.data.find(
           (c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === slug,
@@ -65,7 +65,7 @@ function CoursesDetails() {
         {course.coverPhoto && course.coverPhoto.trim() !== "" && (
           <div className="flex justify-center mb-10">
             <img
-              src={`http://localhost:8080${course.coverPhoto}`}
+              src={`https://localhost:7018${course.coverPhoto}`}
               alt={course.courseName}
               className="w-full max-w-3xl h-64 object-cover rounded-2xl shadow-lg"
             />

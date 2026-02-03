@@ -5,7 +5,6 @@ import Placement from "./Pages/Placement";
 import Courses from "./Pages/Courses";
 import CampusLife from "./Pages/CampusLife";
 import Faculty from "./Pages/Faculty";
-import OPDC from "./Pages/OPDC";
 import ContactSection from "./Pages/ContactSection";
 import PlacementAlbum from "./Pages/PlacementAlbum";
 import MoreRecruiters from "./Pages/MoreRecruiters";
@@ -19,7 +18,8 @@ import ExcelUpload from "./Components/Admin/ExcelUpload";
 import Signup from "./Components/Admin/Signup";
 import OAuthSuccess from "./Components/Admin/OAuthSuccess";
 import FollowUpDashboard from "./Pages/FollowUpDashboard";
-import RegisteredStudentsPage from './Components/Admin/RegisteredStudents/RegisteredStudentsPage';
+import RegisteredStudentsPage from "./Components/Admin/RegisteredStudents/RegisteredStudentsPage";
+import RecruiterStudents from "./Pages/RecruiterStudents";
 
 function App() {
   return (
@@ -31,11 +31,18 @@ function App() {
           <Route path="/placement/:albumId" element={<PlacementAlbum />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/campus-life" element={<CampusLife />} />
-          {/* <Route path="/pg-diploma" element={<OPDC />} /> */}
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/contact" element={<ContactSection />} />
           <Route path="/more-recruiters" element={<MoreRecruiters />} />
           <Route path="/courses/:slug" element={<CoursesDetails />} />
+          <Route
+            path="/recruiters/:recruiterId"
+            element={<RecruiterStudents />}
+          />
+          <Route
+            path="/placement/batch/:batchId"
+            element={<PlacementAlbum />}
+          />
         </Route>
 
         <Route path="/admin/login" element={<Login />} />
@@ -51,11 +58,14 @@ function App() {
           }
         >
           <Route index element={<Navigate to="follow-up" replace />} />
-          <Route path="follow-up" element={<FollowUpDashboard/>} />
+          <Route path="follow-up" element={<FollowUpDashboard />} />
           <Route path="table-maintenance" element={<TableMaintenance />} />
           <Route path="excel-upload" element={<ExcelUpload />} />
           // Add this route:
-          <Route path="/admin/registered-students" element={<RegisteredStudentsPage />} />
+          <Route
+            path="/admin/registered-students"
+            element={<RegisteredStudentsPage />}
+          />
         </Route>
       </Routes>
     </>

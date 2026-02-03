@@ -8,7 +8,7 @@ const Hero = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/announcements/active")
+      .get("https://localhost:7018/api/announcements/active")
       .then((response) => {
         setAnnouncements(response.data);
       })
