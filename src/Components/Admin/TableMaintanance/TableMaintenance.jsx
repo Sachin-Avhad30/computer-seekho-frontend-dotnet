@@ -52,6 +52,7 @@ import React, { useState } from 'react';
 import BatchManagement from './BatchManagement';
 import CourseManagement from './CourseManagement';
 import AnnouncementManagement from './AnnouncementMaintainance';
+import RecruiterManagement from './RecruiterManagement';
 
 const TableMaintenance = () => {
   const [selectedTable, setSelectedTable] = useState('');
@@ -59,7 +60,8 @@ const TableMaintenance = () => {
   const tables = [
     { value: 'batch', label: 'Batch Master' },
     { value: 'course', label: 'Course Master' },
-    { value: 'announcement', label: 'Announcement Master' }
+    { value: 'announcement', label: 'Announcement Master' },
+    { value: 'recruiter', label: 'Recruiter Master' }
   ];
 
   return (
@@ -94,6 +96,7 @@ const TableMaintenance = () => {
         {selectedTable === 'batch' && <BatchManagement />}
         {selectedTable === 'course' && <CourseManagement />}
         {selectedTable === 'announcement' && <AnnouncementManagement />}
+        {selectedTable === 'recruiter' && <RecruiterManagement />}
       </div>
     </div>
   );
