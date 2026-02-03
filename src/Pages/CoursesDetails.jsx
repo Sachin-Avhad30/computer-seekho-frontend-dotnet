@@ -1,8 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaClock, FaRupeeSign, FaUsers, FaFileAlt, FaInfoCircle } from "react-icons/fa";
-import {useNavigate } from "react-router-dom";
+import {
+  FaClock,
+  FaRupeeSign,
+  FaUsers,
+  FaFileAlt,
+  FaInfoCircle,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function CoursesDetails() {
   const { slug } = useParams();
@@ -59,7 +65,7 @@ function CoursesDetails() {
         {course.coverPhoto && course.coverPhoto.trim() !== "" && (
           <div className="flex justify-center mb-10">
             <img
-              src={course.coverPhoto}
+              src={`http://localhost:8080${course.coverPhoto}`}
               alt={course.courseName}
               className="w-full max-w-3xl h-64 object-cover rounded-2xl shadow-lg"
             />
@@ -90,7 +96,8 @@ function CoursesDetails() {
                 <FaClock className="text-blue-600" /> Duration
               </span>
               <span className="text-blue-900 font-bold">
-                {course.courseDuration} {course.courseDuration === 1 ? 'Month' : 'Months'}
+                {course.courseDuration}{" "}
+                {course.courseDuration === 1 ? "Month" : "Months"}
               </span>
             </div>
           )}
@@ -102,7 +109,7 @@ function CoursesDetails() {
                 <FaRupeeSign className="text-green-600" /> Fees
               </span>
               <span className="text-blue-900 font-bold">
-                ₹ {course.courseFees.toLocaleString('en-IN')}
+                ₹ {course.courseFees.toLocaleString("en-IN")}
               </span>
             </div>
           )}
@@ -137,8 +144,10 @@ function CoursesDetails() {
 
         {/* ENROLL BUTTON */}
         <div className="flex justify-center mt-12">
-          <button  onClick={() => navigate("/contact")}
-          className="px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <button
+            onClick={() => navigate("/contact")}
+            className="px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+          >
             Enroll Now
           </button>
         </div>

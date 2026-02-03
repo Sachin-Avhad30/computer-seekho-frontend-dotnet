@@ -1,6 +1,5 @@
 import Navbar from "../Navbar/NavBar";
-import appLogo1 from "../../assets/CSlogo1.png";
-import appLogo2 from "../../assets/CSlogo2.png";
+
 import appLogo3 from "../../assets/CSlogo3.jpg";
 
 function Header() {
