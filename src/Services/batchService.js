@@ -24,7 +24,7 @@ const batchService = {
       formData.append("batchLogo", batchLogo); // must match @RequestParam name
     }
 
-    const response = await api.post("/batches", formData, {
+    const response = await api.post("/Batches", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -54,7 +54,7 @@ const batchService = {
       formData.append("batchLogo", batchLogo); // must match @RequestParam name
     }
 
-    const response = await api.put(`/batches/${batchId}`, formData, {
+    const response = await api.put(`/Batches/${batchId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

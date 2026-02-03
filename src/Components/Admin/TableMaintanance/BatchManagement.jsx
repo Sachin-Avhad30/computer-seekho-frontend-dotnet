@@ -273,7 +273,7 @@ const BatchManagement = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           {batch.batchLogoUrl && (
                             <img
-                              src={`http://localhost:8080${batch.batchLogoUrl}`}
+                              src={`https://localhost:7018${batch.batchLogoUrl}`}
                               alt="batch logo"
                               className="w-12 h-12 object-cover rounded"
                             />

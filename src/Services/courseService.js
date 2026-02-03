@@ -21,7 +21,7 @@ const courseService = {
       formData.append("coverPhoto", coverPhoto);
     }
 
-    const response = await api.post("/courses", formData, {
+    const response = await api.post("/Courses", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -29,7 +29,6 @@ const courseService = {
 
     return response.data;
   },
-
 
   updateCourse: async (courseId, courseData, coverPhoto) => {
     const formData = new FormData();
@@ -50,7 +49,7 @@ const courseService = {
       formData.append("coverPhoto", coverPhoto);
     }
 
-    const response = await api.put(`/courses/${courseId}`, formData, {
+    const response = await api.put(`/Courses/${courseId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
