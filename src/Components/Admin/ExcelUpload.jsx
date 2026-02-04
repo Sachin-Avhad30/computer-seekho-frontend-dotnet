@@ -29,7 +29,7 @@ const ExcelUpload = () => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:8080/api/albums/upload-excel",
+        "https://localhost:7018/api/albums/upload-excel",
         formData,
         {
           headers: {
@@ -38,7 +38,7 @@ const ExcelUpload = () => {
         },
       );
 
-      alert(response.data); // success message from backend
+      alert(response.data);
       setSelectedFile(null);
     } catch (error) {
       console.error("Upload error:", error);
