@@ -19,7 +19,7 @@ function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = "http://localhost:5087/api/auth/google-login";
   };
 
   const handleSubmit = async (e) => {

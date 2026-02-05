@@ -29,7 +29,7 @@ const ExcelUpload = () => {
       setLoading(true);
 
       const response = await axios.post(
-        "https://localhost:7018/api/albums/upload-excel",
+        "http://localhost:5087/api/albums/upload-excel",
         formData,
         {
           headers: {

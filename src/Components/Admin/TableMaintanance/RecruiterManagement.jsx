@@ -3,7 +3,7 @@ import axios from "axios";
 import { Edit2, Trash2, Upload, X } from "lucide-react";
 import Pagination from "./Pagination";
 
-const API_BASE = "https://localhost:7018"; // Update with your API URL
+const API_BASE = "http://localhost:5087"; // Update with your API URL
 
 const RecruiterManagement = () => {
   const [recruiters, setRecruiters] = useState([]);
@@ -403,6 +403,6 @@ const RecruiterManagement = () => {
       )}
     </div>
   );
-}; 
+};
 
 export default RecruiterManagement;

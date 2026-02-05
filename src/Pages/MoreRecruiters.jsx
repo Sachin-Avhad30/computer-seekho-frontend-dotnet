@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const API_BASE = "https://localhost:7018";
+const API_BASE = "http://localhost:5087";
 
 // const MoreRecruiters = () => {
 //   const [logos, setLogos] = useState([]);
@@ -47,7 +47,7 @@ const API_BASE = "https://localhost:7018";
 
 // export default MoreRecruiters;
 
-//const API_BASE = "https://localhost:7018";
+//const API_BASE = "http://localhost:5087";
 
 const MoreRecruiters = () => {
   const [logos, setLogos] = useState([]);

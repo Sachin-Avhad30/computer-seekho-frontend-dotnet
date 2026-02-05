@@ -9,7 +9,7 @@ function CampusLife() {
     const fetchCampusLife = async () => {
       try {
         const res = await fetch(
-          "https://localhost:7018/api/albums/Campus-Life",
+          "http://localhost:5087/api/albums/Campus-Life",
         );
 
         if (!res.ok) {
