@@ -1,6 +1,13 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ClipboardList, Users, Wrench, FileSpreadsheet } from "lucide-react"; // ✅ Import icons
+import {
+  ClipboardList,
+  Users,
+  Wrench,
+  FileSpreadsheet,
+  icons,
+  User,
+} from "lucide-react"; // ✅ Import icons
 import AdminHeader from "./AdminHeader";
 import AdminFooter from "./AdminFooter";
 
@@ -12,12 +19,30 @@ function AdminLayout() {
     localStorage.removeItem("isAuthenticated");
     navigate("/admin/login");
   };
-  
+
   const menuItems = [
     { path: "/admin/follow-up", label: "Follow Up", icon: ClipboardList },
-    { path: "/admin/registered-students", label: "Registered Students", icon: Users }, // ✅ NEW
-    { path: "/admin/table-maintenance", label: "Table Maintenance", icon: Wrench },
-    { path: "/admin/excel-upload", label: "Excel Upload", icon: FileSpreadsheet },
+    {
+      path: "/admin/registered-students",
+      label: "Registered Students",
+      icon: Users,
+    },
+    {
+      path: "/admin/table-maintenance",
+      label: "Table Maintenance",
+      icon: Wrench,
+    },
+    {
+      path: "/admin/excel-upload",
+      label: "Excel Upload",
+      icon: FileSpreadsheet,
+    },
+
+    {
+      path: "/admin/add-staff", // ✅ Add this new menu item
+      label: "Add Staff",
+      icon: User,
+    },
   ];
 
   return (

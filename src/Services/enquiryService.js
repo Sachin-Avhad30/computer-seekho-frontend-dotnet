@@ -1,20 +1,20 @@
-import axios from 'axios';
-import { API_BASE_URL } from '../utils/constants';
+import axios from "axios";
+import { API_BASE_URL } from "../utils/constants";
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // Course API (separate base URL)
 const courseApi = axios.create({
-  baseURL: 'https://localhost:7018/api/courses',
+  baseURL: "http://localhost:5087/api/courses",
   headers: {
-    'Content-Type': 'application/json'
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // API Service Functions
@@ -25,10 +25,10 @@ const courseApi = axios.create({
  */
 export const getAllCourses = async () => {
   try {
-    const response = await courseApi.get('');
+    const response = await courseApi.get("");
     return response.data;
   } catch (error) {
-    console.error('Error fetching courses:', error);
+    console.error("Error fetching courses:", error);
     throw error;
   }
 };
@@ -38,10 +38,10 @@ export const getAllCourses = async () => {
  */
 export const getActiveCourses = async () => {
   try {
-    const response = await courseApi.get('/active');
+    const response = await courseApi.get("/active");
     return response.data;
   } catch (error) {
-    console.error('Error fetching active courses:', error);
+    console.error("Error fetching active courses:", error);
     throw error;
   }
 };
@@ -54,7 +54,7 @@ export const getFollowupsForStaff = async (staffId) => {
     const response = await api.get(`/followups/staff/${staffId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching staff followups:', error);
+    console.error("Error fetching staff followups:", error);
     throw error;
   }
 };
@@ -64,10 +64,10 @@ export const getFollowupsForStaff = async (staffId) => {
  */
 export const getAllFollowups = async () => {
   try {
-    const response = await api.get('/followups/all');
+    const response = await api.get("/followups/all");
     return response.data;
   } catch (error) {
-    console.error('Error fetching all followups:', error);
+    console.error("Error fetching all followups:", error);
     throw error;
   }
 };
@@ -77,10 +77,10 @@ export const getAllFollowups = async () => {
  */
 export const createEnquiry = async (enquiryData) => {
   try {
-    const response = await api.post('', enquiryData);
+    const response = await api.post("", enquiryData);
     return response.data;
   } catch (error) {
-    console.error('Error creating enquiry:', error);
+    console.error("Error creating enquiry:", error);
     throw error;
   }
 };
@@ -90,10 +90,10 @@ export const createEnquiry = async (enquiryData) => {
  */
 export const updateFollowup = async (followupData) => {
   try {
-    const response = await api.put('/followup', followupData);
+    const response = await api.put("/followup", followupData);
     return response.data;
   } catch (error) {
-    console.error('Error updating followup:', error);
+    console.error("Error updating followup:", error);
     throw error;
   }
 };
@@ -106,7 +106,7 @@ export const getEnquiryById = async (enquiryId) => {
     const response = await api.get(`/${enquiryId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching enquiry:', error);
+    console.error("Error fetching enquiry:", error);
     throw error;
   }
 };
@@ -119,7 +119,7 @@ export const updateEnquiry = async (enquiryId, enquiryData) => {
     const response = await api.put(`/${enquiryId}`, enquiryData);
     return response.data;
   } catch (error) {
-    console.error('Error updating enquiry:', error);
+    console.error("Error updating enquiry:", error);
     throw error;
   }
 };
@@ -132,5 +132,5 @@ export default {
   getEnquiryById,
   updateEnquiry,
   getAllCourses,
-  getActiveCourses
+  getActiveCourses,
 };
