@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { X, User } from 'lucide-react';
 import { registerStudent, getBatchesByCourse } from '../../../Services/studentService';
 import { getEnquiryById } from '../../../Services/enquiryService';
-import PaymentModal from './PaymentModal';
-
+import PaymentModal from '../Payment/PaymentModal';
+import ReceiptModal from '../Payment/ReceiptModal';
 const RegisterStudentModal = ({ enquiryId, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     enquiryId: enquiryId,
+    courseId: '',
+    batchId: '',
     studentName: '',
     studentMobile: '',
     studentAddress: '',
@@ -14,11 +16,10 @@ const RegisterStudentModal = ({ enquiryId, onClose, onSuccess }) => {
     studentDob: '',
     studentQualification: '',
     photoUrl: '',
-    courseId: '',
-    batchId: '',
     studentUsername: '',
     studentPassword: '',
-    paymentId: null
+    registrationStatus: 1
+    // paymentId: null
   });
   
   const [loading, setLoading] = useState(false);
