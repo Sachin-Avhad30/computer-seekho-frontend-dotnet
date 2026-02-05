@@ -8,7 +8,7 @@ function CourseOffered() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:7018/api/courses/active")
+      .get("http://localhost:5087/api/courses/active")
       .then((res) => {
         setCourses(res.data);
       })

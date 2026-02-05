@@ -1,38 +1,3 @@
-// import React from "react";
-
-// const FacultyCard = ({ faculty }) => {
-//   const { name, role, description, imageUrl } = faculty;
-
-//   return (
-//     <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-      
-//       {/* IMAGE */}
-//       <img
-//         src={imageUrl}
-//         alt={name}
-//         className="w-full h-137.5 object-cover"
-//       />
-
-//       {/* CONTENT */}
-//       <div className="p-6">
-//         <h3 className="text-2xl font-bold text-gray-800">
-//           {name}
-//         </h3>
-
-//         <p className="text-lg text-blue-600 font-medium mt-1"> 
-//           {role}
-//         </p>
-
-//         <p className="text-gray-600 mt-4 leading-relaxed">
-//           {description}
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default FacultyCard;
-
 import React from "react";
 
 function FacultyCard({ faculty }) {
@@ -40,14 +5,20 @@ function FacultyCard({ faculty }) {
   const getImageUrl = (photoUrl) => {
     if (!photoUrl) {
       // Default placeholder if no image
-      return "https://ui-avatars.com/api/?name=" + encodeURIComponent(faculty.staffName) + "&size=200&background=7c3aed&color=fff";
+      return (
+        "https://ui-avatars.com/api/?name=" +
+        encodeURIComponent(faculty.staffName) +
+        "&size=200&background=7c3aed&color=fff"
+      );
     }
-    
+
     // Remove leading slash if present and construct full URL
-    const cleanPath = photoUrl.startsWith('/') ? photoUrl.substring(1) : photoUrl;
-    const fullUrl = `http://localhost:8080/${cleanPath}`;
-    
-    console.log("🖼️ Image URL:", fullUrl); // Debug log
+    const cleanPath = photoUrl.startsWith("/")
+      ? photoUrl.substring(1)
+      : photoUrl;
+    const fullUrl = `http://localhost:5087/${cleanPath}`;
+
+    console.log("🖼️ Image URL:", fullUrl);
     return fullUrl;
   };
 
@@ -64,7 +35,10 @@ function FacultyCard({ faculty }) {
               onError={(e) => {
                 console.error("❌ Image failed to load:", faculty.photoUrl);
                 // Fallback to avatar with initials
-                e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(faculty.staffName) + "&size=200&background=7c3aed&color=fff";
+                e.target.src =
+                  "https://ui-avatars.com/api/?name=" +
+                  encodeURIComponent(faculty.staffName) +
+                  "&size=200&background=7c3aed&color=fff";
               }}
               onLoad={() => {
                 console.log("✅ Image loaded successfully:", faculty.photoUrl);

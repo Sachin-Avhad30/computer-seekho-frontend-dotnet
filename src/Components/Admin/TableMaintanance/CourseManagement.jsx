@@ -229,7 +229,7 @@ const CourseManagement = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           {course.coverPhoto && (
                             <img
-                              src={`https://localhost:7018${course.coverPhoto}`}
+                              src={`http://localhost:5087${course.coverPhoto}`}
                               alt="course cover"
                               className="w-12 h-12 object-cover rounded"
                             />
@@ -547,7 +547,7 @@ const CourseModal = ({
               <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start gap-4">
                   <img
-                    src={`http://localhost:8080${course.coverPhoto}`}
+                    src={`http://localhost:5087${course.coverPhoto}`}
                     alt="current cover"
                     className="w-24 h-24 object-cover rounded border border-gray-200"
                   />

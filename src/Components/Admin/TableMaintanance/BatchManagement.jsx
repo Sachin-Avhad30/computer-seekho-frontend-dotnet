@@ -33,7 +33,7 @@ const BatchManagement = () => {
   const fetchBatches = async () => {
     setLoading(true);
     try {
-      const response = await Tablemaintainanceapi.get("/batches");
+      const response = await Tablemaintainanceapi.get("/Batches");
       console.log("Batches response:", response.data);
       setBatches(response.data);
     } catch (error) {
@@ -273,7 +273,7 @@ const BatchManagement = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           {batch.batchLogoUrl && (
                             <img
-                              src={`https://localhost:7018${batch.batchLogoUrl}`}
+                              src={`http://localhost:5087${batch.batchLogoUrl}`}
                               alt="batch logo"
                               className="w-12 h-12 object-cover rounded"
                             />

@@ -250,7 +250,7 @@ const PlacementAlbum = () => {
                 <div className="relative h-80 bg-gradient-to-br from-gray-100 to-gray-200">
                   {student.photoUrl ? (
                     <img
-                      src={`https://localhost:7018${student.photoUrl}`}
+                      src={`http://localhost:5087${student.photoUrl}`}
                       alt={student.studentName}
                       className="w-full h-full object-cover"
                       onError={(e) => {

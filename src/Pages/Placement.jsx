@@ -88,7 +88,7 @@ function Placement() {
                 <div className="relative h-56 bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden">
                   {batch.batchLogo ? (
                     <img
-                      src={`https://localhost:7018${batch.batchLogo}`}
+                      src={`http://localhost:5087${batch.batchLogo}`}
                       alt={batch.batchName}
                       className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-110"
                       onError={(e) => {
