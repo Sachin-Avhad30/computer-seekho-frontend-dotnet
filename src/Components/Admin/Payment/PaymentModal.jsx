@@ -1,352 +1,363 @@
-import React, { useState, useEffect } from 'react';
-import { X, CreditCard, AlertCircle, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, CreditCard, AlertCircle } from 'lucide-react';
+import axios from 'axios';
 
-const PaymentModal = ({ 
-  isOpen, 
-  onClose, 
-  studentId, 
-  batchId, 
-  courseFees,
-  onPaymentSuccess,
-  isFirstPayment = false 
-}) => {
+const API_BASE_URL = 'https://localhost:7018/api';
+
+const PAYMENT_TYPES = [
+  { id: 1, name: 'Cash' },
+  { id: 2, name: 'Cheque' },
+  { id: 3, name: 'Demand Draft (DD)' },
+  { id: 4, name: 'Bank Transfer (NEFT/RTGS)' },
+  { id: 5, name: 'UPI' },
+  { id: 6, name: 'Credit Card' },
+  { id: 7, name: 'Debit Card' },
+  { id: 8, name: 'Net Banking' }
+];
+
+const PaymentModal = ({ studentData, selectedBatch, selectedCourse, onClose, onSuccess }) => {
   const [paymentData, setPaymentData] = useState({
-    studentId: studentId,
-    batchId: batchId,
-    paymentTypeId: '',
     paymentAmount: '',
+    paymentTypeId: '',
     transactionReference: '',
     remarks: ''
   });
-
-  const [paymentTypes, setPaymentTypes] = useState([]);
-  const [installmentData, setInstallmentData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchPaymentTypes();
-      if (!isFirstPayment) {
-        fetchInstallmentCalculation();
-      } else {
-        // For first payment, set amount to full course fees
-        setPaymentData(prev => ({
-          ...prev,
-          paymentAmount: courseFees || ''
-        }));
-      }
-    }
-  }, [isOpen, studentId, batchId, isFirstPayment, courseFees]);
+  const courseFees = selectedBatch?.courseFees || 0;
+  const minimumPayment = 1000;
 
-  const fetchPaymentTypes = async () => {
-    try {
-      const response = await fetch('http://localhost:5164/api/PaymentType');
-      const data = await response.json();
-      setPaymentTypes(data);
-    } catch (error) {
-      console.error('Error fetching payment types:', error);
-      setError('Failed to load payment types');
-    }
+  const handleChange = (field, value) => {
+    setPaymentData({ ...paymentData, [field]: value });
+    setError(null);
   };
 
-  const fetchInstallmentCalculation = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:5164/api/Payment/installment-calculation?studentId=${studentId}&batchId=${batchId}`
-      );
-      const data = await response.json();
-      setInstallmentData(data);
-      
-      // Auto-fill remaining balance
-      setPaymentData(prev => ({
-        ...prev,
-        paymentAmount: data.remainingBalance
-      }));
-    } catch (error) {
-      console.error('Error fetching installment calculation:', error);
-      setError('Failed to load payment history');
+  const validatePayment = () => {
+    if (!paymentData.paymentAmount) {
+      setError('Please enter payment amount');
+      return false;
     }
+
+    const amount = parseFloat(paymentData.paymentAmount);
+    if (isNaN(amount) || amount < minimumPayment) {
+      setError(`Minimum payment amount is ₹${minimumPayment}`);
+      return false;
+    }
+
+    if (amount > courseFees) {
+      setError(`Payment amount cannot exceed course fees (₹${courseFees})`);
+      return false;
+    }
+
+    if (!paymentData.paymentTypeId) {
+      setError('Please select payment type');
+      return false;
+    }
+
+    return true;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (!validatePayment()) return;
+
     setLoading(true);
-    setError('');
-
-    // Validation
-    if (parseFloat(paymentData.paymentAmount) < 1000) {
-      setError('Minimum payment amount is ₹1000');
-      setLoading(false);
-      return;
-    }
-
-    if (!isFirstPayment && installmentData && parseFloat(paymentData.paymentAmount) > installmentData.remainingBalance) {
-      setError('Payment amount cannot exceed remaining balance');
-      setLoading(false);
-      return;
-    }
+    setError(null);
 
     try {
-      // Step 1: Process Payment
-      const paymentResponse = await fetch('http://localhost:5164/api/Payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...paymentData,
-          paymentAmount: parseFloat(paymentData.paymentAmount)
-        }),
-      });
-
-      if (!paymentResponse.ok) {
-        throw new Error('Payment processing failed');
+      // Step 1: Create FormData for student registration
+      const formData = new FormData();
+      formData.append('StudentName', studentData.studentName);
+      formData.append('StudentMobile', studentData.studentMobile);
+      formData.append('StudentUsername', studentData.studentEmail); // Email IS username
+      formData.append('StudentPassword', studentData.studentPassword);
+      formData.append('StudentGender', studentData.studentGender);
+      formData.append('StudentAddress', studentData.studentAddress || '');
+      formData.append('StudentQualification', studentData.studentQualification || '');
+      formData.append('CourseId', studentData.courseId);
+      formData.append('BatchId', studentData.batchId);
+      
+      // ✅ Include enquiry ID if present
+      if (studentData.enquiryId) {
+        formData.append('EnquiryId', studentData.enquiryId);
+      }
+      
+      if (studentData.studentDob) {
+        formData.append('StudentDob', studentData.studentDob);
+      }
+      
+      if (studentData.photo) {
+        formData.append('Photo', studentData.photo);
       }
 
-      const paymentResult = await paymentResponse.json();
-
-      // Step 2: Generate Receipt
-      const receiptResponse = await fetch(
-        `http://localhost:5164/api/Payment/${paymentResult.paymentId}/receipt`,
-        { method: 'POST' }
+      // Register student
+      console.log('Registering student...');
+      const studentResponse = await axios.post(
+        `${API_BASE_URL}/students`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
 
-      if (!receiptResponse.ok) {
-        throw new Error('Receipt generation failed');
+      console.log('Student registered:', studentResponse.data);
+
+      // Step 2: Get the student ID (fetch all students and find the latest one)
+      const studentsResponse = await axios.get(`${API_BASE_URL}/students`);
+      const students = studentsResponse.data;
+      const newStudent = students.find(s => 
+        s.studentUsername === studentData.studentEmail
+      );
+
+      if (!newStudent) {
+        throw new Error('Student registered but ID not found');
       }
 
-      const receipt = await receiptResponse.json();
+      console.log('Found student ID:', newStudent.studentId);
 
-      alert(`✅ Payment Successful!\n\nReceipt ID: ${receipt.receiptId}\nAmount Paid: ₹${receipt.receiptAmount}\nRemaining Balance: ₹${receipt.remainingBalance}`);
+      // Step 3: Create payment
+      const paymentPayload = {
+        studentId: newStudent.studentId,
+        batchId: parseInt(studentData.batchId),
+        paymentTypeId: parseInt(paymentData.paymentTypeId),
+        paymentAmount: parseFloat(paymentData.paymentAmount),
+        transactionReference: paymentData.transactionReference || null,
+        remarks: paymentData.remarks || `Initial payment for ${selectedCourse?.courseName || 'course'}`
+      };
+
+      console.log('Creating payment:', paymentPayload);
+      const paymentResponse = await axios.post(
+        `${API_BASE_URL}/payments`,
+        paymentPayload
+      );
+
+      console.log('Payment created:', paymentResponse.data);
+
+      // Step 4: Generate receipt and send email
+      const paymentId = paymentResponse.data.paymentId;
       
-      onPaymentSuccess(receipt);
-      onClose();
+      console.log('Generating receipt for payment:', paymentId);
+      const receiptResponse = await axios.post(
+        `${API_BASE_URL}/payments/${paymentId}/receipt`
+      );
+
+      console.log('Receipt generated:', receiptResponse.data);
+
+      // Step 5: Send receipt email
+      const receiptId = receiptResponse.data.receiptId;
+      
+      console.log('Sending receipt email:', receiptId);
+      await axios.get(
+        `${API_BASE_URL}/payments/receipt/${receiptId}/email`
+      );
+
+      alert(`✅ Success! 
+      
+Student registered successfully!
+Payment of ₹${paymentData.paymentAmount} recorded.
+Receipt generated and sent to ${studentData.studentEmail}
+
+Student ID: ${newStudent.studentId}
+Receipt ID: ${receiptId}`);
+
+      onSuccess();
     } catch (error) {
-      console.error('Error processing payment:', error);
-      setError(error.message || 'Failed to process payment');
+      console.error('Error during registration/payment:', error);
+      setError(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to process registration and payment. Please try again.'
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPaymentData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 flex justify-between items-center sticky top-0">
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-[60]">
+      <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-green-600 to-green-700 text-white p-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <CreditCard size={28} />
-            <div>
-              <h2 className="text-2xl font-bold">
-                {isFirstPayment ? 'Registration Payment' : 'Make Payment'}
-              </h2>
-              <p className="text-sm text-purple-100">
-                {isFirstPayment ? 'Complete payment to activate registration' : 'Pay installment'}
-              </p>
-            </div>
+            <CreditCard size={24} />
+            <h2 className="text-xl font-bold">Initial Payment</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition"
+          <button 
+            onClick={onClose} 
+            className="hover:bg-green-800 p-1 rounded"
+            disabled={loading}
           >
             <X size={24} />
           </button>
         </div>
 
         <div className="p-6">
-          {/* Payment History (only for subsequent payments) */}
-          {!isFirstPayment && installmentData && (
-            <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-900 mb-3">Payment Summary</h3>
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div>
-                  <div className="text-sm text-gray-600">Total Course Fees</div>
-                  <div className="text-xl font-bold text-gray-800">
-                    ₹{installmentData.totalCourseFees.toFixed(2)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600">Total Paid</div>
-                  <div className="text-xl font-bold text-green-600">
-                    ₹{installmentData.totalPaid.toFixed(2)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600">Remaining Balance</div>
-                  <div className="text-xl font-bold text-red-600">
-                    ₹{installmentData.remainingBalance.toFixed(2)}
-                  </div>
+          {/* Student & Course Summary */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h3 className="font-semibold text-gray-800 mb-3">Registration Summary</h3>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span className="font-medium text-gray-600">Student:</span>
+                <div className="text-gray-900 font-semibold">{studentData.studentName}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">Email:</span>
+                <div className="text-gray-900">{studentData.studentEmail}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">Course:</span>
+                <div className="text-gray-900">{selectedCourse?.courseName || 'N/A'}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">Batch:</span>
+                <div className="text-gray-900">{selectedBatch?.batchName || 'N/A'}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Course Fees Info */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <div className="text-sm text-gray-600 mb-1">Total Course Fees</div>
+                <div className="text-3xl font-bold text-green-700">
+                  ₹{courseFees.toLocaleString('en-IN')}
                 </div>
               </div>
-
-              {/* Previous Payments */}
-              {installmentData.previousPayments.length > 0 && (
-                <div>
-                  <h4 className="font-medium text-gray-700 mb-2">Previous Payments:</h4>
-                  <div className="space-y-2">
-                    {installmentData.previousPayments.map((payment, index) => (
-                      <div key={payment.paymentId} className="flex justify-between items-center bg-white p-3 rounded border border-gray-200">
-                        <div>
-                          <span className="font-medium">Payment #{index + 1}</span>
-                          <span className="text-sm text-gray-500 ml-2">
-                            ({payment.paymentTypeDesc})
-                          </span>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-semibold text-green-600">
-                            ₹{payment.paymentAmount.toFixed(2)}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            {new Date(payment.paymentDate).toLocaleDateString('en-IN')}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* First Payment Info */}
-          {isFirstPayment && (
-            <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="text-yellow-600 flex-shrink-0 mt-1" size={20} />
-                <div>
-                  <h3 className="font-semibold text-yellow-900 mb-1">First Payment Required</h3>
-                  <p className="text-sm text-yellow-800">
-                    Minimum payment of ₹1000 is required to activate your registration. 
-                    You can pay the full amount or make partial payments later.
-                  </p>
+              <div className="text-right">
+                <div className="text-sm text-gray-600 mb-1">Minimum Payment</div>
+                <div className="text-2xl font-semibold text-orange-600">
+                  ₹{minimumPayment.toLocaleString('en-IN')}
                 </div>
               </div>
             </div>
-          )}
+            <div className="mt-3 text-xs text-gray-600 bg-white/50 rounded p-2">
+              💡 You can pay in installments. Minimum ₹1,000 per installment.
+            </div>
+          </div>
 
-          {/* Error Message */}
+          {/* Error Display */}
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-center gap-2">
-              <AlertCircle className="text-red-600" size={20} />
-              <span className="text-red-700">{error}</span>
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+              <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+              <div className="text-sm text-red-800">{error}</div>
             </div>
           )}
 
           {/* Payment Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Payment Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Payment Type <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="paymentTypeId"
-                  value={paymentData.paymentTypeId}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="">Select Payment Type</option>
-                  {paymentTypes.map((type) => (
-                    <option key={type.paymentTypeId} value={type.paymentTypeId}>
-                      {type.paymentTypeDesc}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Payment Amount */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Payment Amount <span className="text-red-500">*</span>
-                  <span className="text-xs text-gray-500 ml-2">(Min: ₹1000)</span>
-                </label>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Payment Amount * (Min: ₹{minimumPayment}, Max: ₹{courseFees})
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">
+                  ₹
+                </span>
                 <input
                   type="number"
-                  name="paymentAmount"
                   value={paymentData.paymentAmount}
-                  onChange={handleChange}
-                  required
-                  min="1000"
-                  step="0.01"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Enter amount"
+                  onChange={(e) => handleChange('paymentAmount', e.target.value)}
+                  className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-lg font-semibold"
+                  placeholder={`Enter amount (min ₹${minimumPayment})`}
+                  min={minimumPayment}
+                  max={courseFees}
+                  step="100"
+                  disabled={loading}
                 />
+              </div>
+              <div className="mt-1 text-xs text-gray-500">
+                Remaining balance will be collected in future installments
               </div>
             </div>
 
-            {/* Transaction Reference */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Payment Type *
+              </label>
+              <select
+                value={paymentData.paymentTypeId}
+                onChange={(e) => handleChange('paymentTypeId', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                disabled={loading}
+              >
+                <option value="">Select payment method</option>
+                {PAYMENT_TYPES.map(type => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Transaction Reference (Optional)
               </label>
               <input
                 type="text"
-                name="transactionReference"
                 value={paymentData.transactionReference}
-                onChange={handleChange}
+                onChange={(e) => handleChange('transactionReference', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="e.g., Cheque No., Transaction ID, etc."
                 maxLength="100"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Enter transaction/reference number"
+                disabled={loading}
               />
             </div>
 
-            {/* Remarks */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Remarks (Optional)
               </label>
               <textarea
-                name="remarks"
                 value={paymentData.remarks}
-                onChange={handleChange}
+                onChange={(e) => handleChange('remarks', e.target.value)}
+                rows="2"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Any additional notes..."
                 maxLength="500"
-                rows="3"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Add any notes or remarks"
+                disabled={loading}
               />
             </div>
+          </div>
 
-            {/* Submit Button */}
-            <div className="flex gap-3 pt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <span className="animate-spin">⏳</span>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle size={20} />
-                    Process Payment
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+          {/* Info Box */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <h4 className="font-semibold text-blue-900 mb-2">What happens next?</h4>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>✅ Student account will be created</li>
+              <li>✅ Payment will be recorded</li>
+              <li>✅ Receipt will be generated with payment history</li>
+              <li>✅ Receipt PDF will be sent to {studentData.studentEmail}</li>
+              {studentData.enquiryId && <li>✅ Enquiry will be marked as converted</li>}
+            </ul>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 mt-6 pt-4 border-t">
+            <button
+              onClick={onClose}
+              disabled={loading}
+              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:bg-gray-100 disabled:cursor-not-allowed"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold text-lg disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed shadow-lg"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-spin">⏳</span>
+                  Processing...
+                </span>
+              ) : (
+                `Pay ₹${paymentData.paymentAmount || '0'} & Register`
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
