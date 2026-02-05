@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Course API (separate base URL)
 const courseApi = axios.create({
-  baseURL: 'http://localhost:8080/api/courses',
+  baseURL: 'https://localhost:7018/api/courses',
   headers: {
     'Content-Type': 'application/json'
   }

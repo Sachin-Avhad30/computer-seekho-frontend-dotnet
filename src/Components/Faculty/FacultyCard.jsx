@@ -45,7 +45,7 @@ function FacultyCard({ faculty }) {
     
     // Remove leading slash if present and construct full URL
     const cleanPath = photoUrl.startsWith('/') ? photoUrl.substring(1) : photoUrl;
-    const fullUrl = `http://localhost:8080/${cleanPath}`;
+    const fullUrl = `https://localhost:7018/${cleanPath}`;
     
     console.log("🖼️ Image URL:", fullUrl); // Debug log
     return fullUrl;
