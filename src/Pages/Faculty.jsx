@@ -98,7 +98,11 @@ function Faculty() {
         setLoading(true);
         setError(null);
         const data = await getFacultyList();
-        setFacultyList(data);
+        // Filter: Show ONLY Teaching staff as requested
+        const teachingStaffOnly = data.filter(
+          (staff) => staff.staffRole?.toLowerCase() === "teaching",
+        );
+        setFacultyList(teachingStaffOnly);
         setError(null);
       } catch (error) {
         console.error("Failed to load faculty", error);
@@ -253,7 +257,8 @@ function Faculty() {
           </p>
           <div className="mt-4">
             <span className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
-              {facultyList.length} Faculty Member{facultyList.length !== 1 ? "s" : ""}
+              {facultyList.length} Faculty Member
+              {facultyList.length !== 1 ? "s" : ""}
             </span>
           </div>
         </div>
@@ -261,10 +266,7 @@ function Faculty() {
         {/* Faculty Cards - ONE BELOW ANOTHER */}
         <div className="flex flex-col gap-8">
           {facultyList.map((faculty) => (
-            <FacultyCard 
-              key={faculty.staffId} 
-              faculty={faculty} 
-            />
+            <FacultyCard key={faculty.staffId} faculty={faculty} />
           ))}
         </div>
       </div>

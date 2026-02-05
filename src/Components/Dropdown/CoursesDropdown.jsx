@@ -7,7 +7,7 @@ function CoursesDropdown() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:7018/api/courses")
+      .get("http://localhost:5087/api/courses")
       .then((res) => setCourses(res.data))
       .catch((err) => console.error(err));
   }, []);

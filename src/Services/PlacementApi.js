@@ -27,7 +27,7 @@
 // Services/PlacementApi.js
 import axios from "axios";
 
-const API_BASE_URL = "https://localhost:7018/api"; // Update with your actual API URL
+const API_BASE_URL = "http://localhost:5087/api"; // Update with your actual API URL
 
 // Get all batches with placement count
 export const getBatchesWithPlacements = async () => {
