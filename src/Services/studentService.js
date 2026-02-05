@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://localhost:7018/api';
 
 // Create axios instances
 const studentApi = axios.create({
@@ -89,7 +89,7 @@ export const getBatchesByCourse = async (courseId) => {
  */
  export const getAllRegisteredStudents = async () => {
   try {
-    const response = await studentApi.get('/registered');
+    const response = await studentApi.get('');
     console.log('Registered students from backend:', response.data);
     return response.data;
   } catch (error) {
