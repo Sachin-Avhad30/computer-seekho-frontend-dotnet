@@ -20,6 +20,7 @@ import OAuthSuccess from "./Components/Admin/OAuthSuccess";
 import FollowUpDashboard from "./Pages/FollowUpDashboard";
 import RegisteredStudentsPage from "./Components/Admin/RegisteredStudents/RegisteredStudentsPage";
 import RecruiterStudents from "./Pages/RecruiterStudents";
+import AddStaff from "./Components/Admin/AddStaff";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
           <Route path="follow-up" element={<FollowUpDashboard />} />
           <Route path="table-maintenance" element={<TableMaintenance />} />
           <Route path="excel-upload" element={<ExcelUpload />} />
+          <Route path="add-staff" element={<AddStaff />} />
           // Add this route:
           <Route
             path="/admin/registered-students"
