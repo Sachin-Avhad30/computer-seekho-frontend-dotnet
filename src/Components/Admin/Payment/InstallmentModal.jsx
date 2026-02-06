@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { X, CreditCard, AlertCircle, History, DollarSign } from 'lucide-react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { X, CreditCard, AlertCircle, History, DollarSign } from "lucide-react";
+import axios from "axios";
 
-const API_BASE_URL = 'https://localhost:7018/api';
+const API_BASE_URL = "http://localhost:5087/api";
 
 const PAYMENT_TYPES = [
-  { id: 1, name: 'Cash' },
-  { id: 2, name: 'Cheque' },
-  { id: 3, name: 'Demand Draft (DD)' },
-  { id: 4, name: 'Bank Transfer (NEFT/RTGS)' },
-  { id: 5, name: 'UPI' },
-  { id: 6, name: 'Credit Card' },
-  { id: 7, name: 'Debit Card' },
-  { id: 8, name: 'Net Banking' }
+  { id: 1, name: "Cash" },
+  { id: 2, name: "Cheque" },
+  { id: 3, name: "Demand Draft (DD)" },
+  { id: 4, name: "Bank Transfer (NEFT/RTGS)" },
+  { id: 5, name: "UPI" },
+  { id: 6, name: "Credit Card" },
+  { id: 7, name: "Debit Card" },
+  { id: 8, name: "Net Banking" },
 ];
 
 const InstallmentModal = ({ student, onClose, onSuccess }) => {
   const [installmentData, setInstallmentData] = useState(null);
   const [paymentData, setPaymentData] = useState({
-    paymentAmount: '',
-    paymentTypeId: '',
-    transactionReference: '',
-    remarks: ''
+    paymentAmount: "",
+    paymentTypeId: "",
+    transactionReference: "",
+    remarks: "",
   });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -41,14 +41,14 @@ const InstallmentModal = ({ student, onClose, onSuccess }) => {
         {
           params: {
             studentId: student.studentId,
-            batchId: student.batchId
-          }
-        }
+            batchId: student.batchId,
+          },
+        },
       );
       setInstallmentData(response.data);
     } catch (error) {
-      console.error('Error fetching installment calculation:', error);
-      setError('Failed to load payment details. Please try again.');
+      console.error("Error fetching installment calculation:", error);
+      setError("Failed to load payment details. Please try again.");
     } finally {
       setFetching(false);
     }
@@ -61,12 +61,12 @@ const InstallmentModal = ({ student, onClose, onSuccess }) => {
 
   const validatePayment = () => {
     if (!installmentData) {
-      setError('Payment details not loaded');
+      setError("Payment details not loaded");
       return false;
     }
 
     if (!paymentData.paymentAmount) {
-      setError('Please enter payment amount');
+      setError("Please enter payment amount");
       return false;
     }
 
@@ -77,12 +77,14 @@ const InstallmentModal = ({ student, onClose, onSuccess }) => {
     }
 
     if (amount > installmentData.remainingBalance) {
-      setError(`Payment amount cannot exceed remaining balance (₹${installmentData.remainingBalance})`);
+      setError(
+        `Payment amount cannot exceed remaining balance (₹${installmentData.remainingBalance})`,
+      );
       return false;
     }
 
     if (!paymentData.paymentTypeId) {
-      setError('Please select payment type');
+      setError("Please select payment type");
       return false;
     }
 
@@ -103,36 +105,38 @@ const InstallmentModal = ({ student, onClose, onSuccess }) => {
         paymentTypeId: parseInt(paymentData.paymentTypeId),
         paymentAmount: parseFloat(paymentData.paymentAmount),
         transactionReference: paymentData.transactionReference || null,
-        remarks: paymentData.remarks || `Installment payment #${installmentData.installmentsPaid + 1}`
+        remarks:
+          paymentData.remarks ||
+          `Installment payment #${installmentData.installmentsPaid + 1}`,
       };
 
-      console.log('Creating installment payment:', paymentPayload);
+      console.log("Creating installment payment:", paymentPayload);
       const paymentResponse = await axios.post(
         `${API_BASE_URL}/payments`,
-        paymentPayload
+        paymentPayload,
       );
 
-      console.log('Payment created:', paymentResponse.data);
+      console.log("Payment created:", paymentResponse.data);
 
       // Step 2: Generate receipt
       const paymentId = paymentResponse.data.paymentId;
-      
-      console.log('Generating receipt for payment:', paymentId);
+
+      console.log("Generating receipt for payment:", paymentId);
       const receiptResponse = await axios.post(
-        `${API_BASE_URL}/payments/${paymentId}/receipt`
+        `${API_BASE_URL}/payments/${paymentId}/receipt`,
       );
 
-      console.log('Receipt generated:', receiptResponse.data);
+      console.log("Receipt generated:", receiptResponse.data);
 
       // Step 3: Send receipt email
       const receiptId = receiptResponse.data.receiptId;
-      
-      console.log('Sending receipt email:', receiptId);
-      await axios.get(
-        `${API_BASE_URL}/payments/receipt/${receiptId}/email`
-      );
 
-      const newRemainingBalance = installmentData.remainingBalance - parseFloat(paymentData.paymentAmount);
+      console.log("Sending receipt email:", receiptId);
+      await axios.get(`${API_BASE_URL}/payments/receipt/${receiptId}/email`);
+
+      const newRemainingBalance =
+        installmentData.remainingBalance -
+        parseFloat(paymentData.paymentAmount);
 
       alert(`✅ Payment Successful! 
       
@@ -147,11 +151,11 @@ Receipt ID: ${receiptId}`);
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('Error processing installment payment:', error);
+      console.error("Error processing installment payment:", error);
       setError(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to process payment. Please try again.'
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to process payment. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -163,7 +167,9 @@ Receipt ID: ${receiptId}`);
       <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-[60]">
         <div className="bg-white rounded-lg shadow-2xl p-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 text-center">Loading payment details...</p>
+          <p className="mt-4 text-gray-600 text-center">
+            Loading payment details...
+          </p>
         </div>
       </div>
     );
@@ -177,8 +183,8 @@ Receipt ID: ${receiptId}`);
             <CreditCard size={24} />
             <h2 className="text-xl font-bold">Accept Installment Payment</h2>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="hover:bg-blue-800 p-1 rounded"
             disabled={loading}
           >
@@ -189,11 +195,15 @@ Receipt ID: ${receiptId}`);
         <div className="p-6">
           {/* Student Info */}
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 mb-6">
-            <h3 className="font-semibold text-gray-800 mb-3">Student Information</h3>
+            <h3 className="font-semibold text-gray-800 mb-3">
+              Student Information
+            </h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="font-medium text-gray-600">Name:</span>
-                <div className="text-gray-900 font-semibold">{student.studentName}</div>
+                <div className="text-gray-900 font-semibold">
+                  {student.studentName}
+                </div>
               </div>
               <div>
                 <span className="font-medium text-gray-600">Student ID:</span>
@@ -219,7 +229,7 @@ Receipt ID: ${receiptId}`);
                   <div className="text-xs text-gray-600">Total Fees</div>
                 </div>
                 <div className="text-2xl font-bold text-blue-700">
-                  ₹{installmentData.totalCourseFees.toLocaleString('en-IN')}
+                  ₹{installmentData.totalCourseFees.toLocaleString("en-IN")}
                 </div>
               </div>
 
@@ -229,7 +239,7 @@ Receipt ID: ${receiptId}`);
                   <div className="text-xs text-gray-600">Total Paid</div>
                 </div>
                 <div className="text-2xl font-bold text-green-700">
-                  ₹{installmentData.totalPaid.toLocaleString('en-IN')}
+                  ₹{installmentData.totalPaid.toLocaleString("en-IN")}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
                   {installmentData.installmentsPaid} installment(s)
@@ -242,7 +252,7 @@ Receipt ID: ${receiptId}`);
                   <div className="text-xs text-gray-600">Remaining</div>
                 </div>
                 <div className="text-2xl font-bold text-orange-700">
-                  ₹{installmentData.remainingBalance.toLocaleString('en-IN')}
+                  ₹{installmentData.remainingBalance.toLocaleString("en-IN")}
                 </div>
               </div>
             </div>
@@ -257,19 +267,26 @@ Receipt ID: ${receiptId}`);
               </div>
               <div className="space-y-2 max-h-40 overflow-y-auto">
                 {installmentData.previousPayments.map((payment, index) => (
-                  <div key={payment.paymentId} className="flex justify-between items-center text-sm bg-white p-2 rounded">
+                  <div
+                    key={payment.paymentId}
+                    className="flex justify-between items-center text-sm bg-white p-2 rounded"
+                  >
                     <div className="flex items-center gap-2">
                       <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-semibold">
                         #{index + 1}
                       </span>
-                      <span className="text-gray-700">{payment.paymentTypeDesc}</span>
+                      <span className="text-gray-700">
+                        {payment.paymentTypeDesc}
+                      </span>
                     </div>
                     <div className="flex items-center gap-4">
                       <span className="text-gray-500">
-                        {new Date(payment.paymentDate).toLocaleDateString('en-IN')}
+                        {new Date(payment.paymentDate).toLocaleDateString(
+                          "en-IN",
+                        )}
                       </span>
                       <span className="font-semibold text-green-700">
-                        ₹{payment.paymentAmount.toLocaleString('en-IN')}
+                        ₹{payment.paymentAmount.toLocaleString("en-IN")}
                       </span>
                     </div>
                   </div>
@@ -281,7 +298,10 @@ Receipt ID: ${receiptId}`);
           {/* Error Display */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex items-start gap-3">
-              <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+              <AlertCircle
+                className="text-red-600 flex-shrink-0 mt-0.5"
+                size={20}
+              />
               <div className="text-sm text-red-800">{error}</div>
             </div>
           )}
@@ -291,7 +311,8 @@ Receipt ID: ${receiptId}`);
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Installment Amount * (Min: ₹{minimumPayment}, Max: ₹{installmentData.remainingBalance})
+                  Installment Amount * (Min: ₹{minimumPayment}, Max: ₹
+                  {installmentData.remainingBalance})
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">
@@ -300,7 +321,9 @@ Receipt ID: ${receiptId}`);
                   <input
                     type="number"
                     value={paymentData.paymentAmount}
-                    onChange={(e) => handleChange('paymentAmount', e.target.value)}
+                    onChange={(e) =>
+                      handleChange("paymentAmount", e.target.value)
+                    }
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-lg font-semibold"
                     placeholder={`Enter amount (min ₹${minimumPayment})`}
                     min={minimumPayment}
@@ -317,12 +340,14 @@ Receipt ID: ${receiptId}`);
                 </label>
                 <select
                   value={paymentData.paymentTypeId}
-                  onChange={(e) => handleChange('paymentTypeId', e.target.value)}
+                  onChange={(e) =>
+                    handleChange("paymentTypeId", e.target.value)
+                  }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   disabled={loading}
                 >
                   <option value="">Select payment method</option>
-                  {PAYMENT_TYPES.map(type => (
+                  {PAYMENT_TYPES.map((type) => (
                     <option key={type.id} value={type.id}>
                       {type.name}
                     </option>
@@ -337,7 +362,9 @@ Receipt ID: ${receiptId}`);
                 <input
                   type="text"
                   value={paymentData.transactionReference}
-                  onChange={(e) => handleChange('transactionReference', e.target.value)}
+                  onChange={(e) =>
+                    handleChange("transactionReference", e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g., Cheque No., Transaction ID, etc."
                   maxLength="100"
@@ -351,7 +378,7 @@ Receipt ID: ${receiptId}`);
                 </label>
                 <textarea
                   value={paymentData.remarks}
-                  onChange={(e) => handleChange('remarks', e.target.value)}
+                  onChange={(e) => handleChange("remarks", e.target.value)}
                   rows="2"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Any additional notes..."
@@ -362,7 +389,9 @@ Receipt ID: ${receiptId}`);
 
               {/* Info Box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2">What happens next?</h4>
+                <h4 className="font-semibold text-blue-900 mb-2">
+                  What happens next?
+                </h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>✅ Payment will be recorded</li>
                   <li>✅ Receipt will be generated with payment history</li>
@@ -390,7 +419,7 @@ Receipt ID: ${receiptId}`);
                       Processing...
                     </span>
                   ) : (
-                    `Submit Payment of ₹${paymentData.paymentAmount || '0'}`
+                    `Submit Payment of ₹${paymentData.paymentAmount || "0"}`
                   )}
                 </button>
               </div>

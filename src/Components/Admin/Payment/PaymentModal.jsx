@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
-import { X, CreditCard, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import React, { useState } from "react";
+import { X, CreditCard, AlertCircle } from "lucide-react";
+import axios from "axios";
 
-const API_BASE_URL = 'https://localhost:7018/api';
+const API_BASE_URL = "http://localhost:5087/api";
 
 const PAYMENT_TYPES = [
-  { id: 1, name: 'Cash' },
-  { id: 2, name: 'Cheque' },
-  { id: 3, name: 'Demand Draft (DD)' },
-  { id: 4, name: 'Bank Transfer (NEFT/RTGS)' },
-  { id: 5, name: 'UPI' },
-  { id: 6, name: 'Credit Card' },
-  { id: 7, name: 'Debit Card' },
-  { id: 8, name: 'Net Banking' }
+  { id: 1, name: "Cash" },
+  { id: 2, name: "Cheque" },
+  { id: 3, name: "Demand Draft (DD)" },
+  { id: 4, name: "Bank Transfer (NEFT/RTGS)" },
+  { id: 5, name: "UPI" },
+  { id: 6, name: "Credit Card" },
+  { id: 7, name: "Debit Card" },
+  { id: 8, name: "Net Banking" },
 ];
 
-const PaymentModal = ({ studentData, selectedBatch, selectedCourse, onClose, onSuccess }) => {
+const PaymentModal = ({
+  studentData,
+  selectedBatch,
+  selectedCourse,
+  onClose,
+  onSuccess,
+}) => {
   const [paymentData, setPaymentData] = useState({
-    paymentAmount: '',
-    paymentTypeId: '',
-    transactionReference: '',
-    remarks: ''
+    paymentAmount: "",
+    paymentTypeId: "",
+    transactionReference: "",
+    remarks: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +41,7 @@ const PaymentModal = ({ studentData, selectedBatch, selectedCourse, onClose, onS
 
   const validatePayment = () => {
     if (!paymentData.paymentAmount) {
-      setError('Please enter payment amount');
+      setError("Please enter payment amount");
       return false;
     }
 
@@ -51,7 +57,7 @@ const PaymentModal = ({ studentData, selectedBatch, selectedCourse, onClose, onS
     }
 
     if (!paymentData.paymentTypeId) {
-      setError('Please select payment type');
+      setError("Please select payment type");
       return false;
     }
 
@@ -67,55 +73,58 @@ const PaymentModal = ({ studentData, selectedBatch, selectedCourse, onClose, onS
     try {
       // Step 1: Create FormData for student registration
       const formData = new FormData();
-      formData.append('StudentName', studentData.studentName);
-      formData.append('StudentMobile', studentData.studentMobile);
-      formData.append('StudentUsername', studentData.studentEmail); // Email IS username
-      formData.append('StudentPassword', studentData.studentPassword);
-      formData.append('StudentGender', studentData.studentGender);
-      formData.append('StudentAddress', studentData.studentAddress || '');
-      formData.append('StudentQualification', studentData.studentQualification || '');
-      formData.append('CourseId', studentData.courseId);
-      formData.append('BatchId', studentData.batchId);
-      
+      formData.append("StudentName", studentData.studentName);
+      formData.append("StudentMobile", studentData.studentMobile);
+      formData.append("StudentUsername", studentData.studentEmail); // Email IS username
+      formData.append("StudentPassword", studentData.studentPassword);
+      formData.append("StudentGender", studentData.studentGender);
+      formData.append("StudentAddress", studentData.studentAddress || "");
+      formData.append(
+        "StudentQualification",
+        studentData.studentQualification || "",
+      );
+      formData.append("CourseId", studentData.courseId);
+      formData.append("BatchId", studentData.batchId);
+
       // ✅ Include enquiry ID if present
       if (studentData.enquiryId) {
-        formData.append('EnquiryId', studentData.enquiryId);
+        formData.append("EnquiryId", studentData.enquiryId);
       }
-      
+
       if (studentData.studentDob) {
-        formData.append('StudentDob', studentData.studentDob);
+        formData.append("StudentDob", studentData.studentDob);
       }
-      
+
       if (studentData.photo) {
-        formData.append('Photo', studentData.photo);
+        formData.append("Photo", studentData.photo);
       }
 
       // Register student
-      console.log('Registering student...');
+      console.log("Registering student...");
       const studentResponse = await axios.post(
         `${API_BASE_URL}/students`,
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
 
-      console.log('Student registered:', studentResponse.data);
+      console.log("Student registered:", studentResponse.data);
 
       // Step 2: Get the student ID (fetch all students and find the latest one)
       const studentsResponse = await axios.get(`${API_BASE_URL}/students`);
       const students = studentsResponse.data;
-      const newStudent = students.find(s => 
-        s.studentUsername === studentData.studentEmail
+      const newStudent = students.find(
+        (s) => s.studentUsername === studentData.studentEmail,
       );
 
       if (!newStudent) {
-        throw new Error('Student registered but ID not found');
+        throw new Error("Student registered but ID not found");
       }
 
-      console.log('Found student ID:', newStudent.studentId);
+      console.log("Found student ID:", newStudent.studentId);
 
       // Step 3: Create payment
       const paymentPayload = {
@@ -124,34 +133,34 @@ const PaymentModal = ({ studentData, selectedBatch, selectedCourse, onClose, onS
         paymentTypeId: parseInt(paymentData.paymentTypeId),
         paymentAmount: parseFloat(paymentData.paymentAmount),
         transactionReference: paymentData.transactionReference || null,
-        remarks: paymentData.remarks || `Initial payment for ${selectedCourse?.courseName || 'course'}`
+        remarks:
+          paymentData.remarks ||
+          `Initial payment for ${selectedCourse?.courseName || "course"}`,
       };
 
-      console.log('Creating payment:', paymentPayload);
+      console.log("Creating payment:", paymentPayload);
       const paymentResponse = await axios.post(
         `${API_BASE_URL}/payments`,
-        paymentPayload
+        paymentPayload,
       );
 
-      console.log('Payment created:', paymentResponse.data);
+      console.log("Payment created:", paymentResponse.data);
 
       // Step 4: Generate receipt and send email
       const paymentId = paymentResponse.data.paymentId;
-      
-      console.log('Generating receipt for payment:', paymentId);
+
+      console.log("Generating receipt for payment:", paymentId);
       const receiptResponse = await axios.post(
-        `${API_BASE_URL}/payments/${paymentId}/receipt`
+        `${API_BASE_URL}/payments/${paymentId}/receipt`,
       );
 
-      console.log('Receipt generated:', receiptResponse.data);
+      console.log("Receipt generated:", receiptResponse.data);
 
       // Step 5: Send receipt email
       const receiptId = receiptResponse.data.receiptId;
-      
-      console.log('Sending receipt email:', receiptId);
-      await axios.get(
-        `${API_BASE_URL}/payments/receipt/${receiptId}/email`
-      );
+
+      console.log("Sending receipt email:", receiptId);
+      await axios.get(`${API_BASE_URL}/payments/receipt/${receiptId}/email`);
 
       alert(`✅ Success! 
       
@@ -164,11 +173,11 @@ Receipt ID: ${receiptId}`);
 
       onSuccess();
     } catch (error) {
-      console.error('Error during registration/payment:', error);
+      console.error("Error during registration/payment:", error);
       setError(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to process registration and payment. Please try again.'
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to process registration and payment. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -183,8 +192,8 @@ Receipt ID: ${receiptId}`);
             <CreditCard size={24} />
             <h2 className="text-xl font-bold">Initial Payment</h2>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="hover:bg-green-800 p-1 rounded"
             disabled={loading}
           >
@@ -195,11 +204,15 @@ Receipt ID: ${receiptId}`);
         <div className="p-6">
           {/* Student & Course Summary */}
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <h3 className="font-semibold text-gray-800 mb-3">Registration Summary</h3>
+            <h3 className="font-semibold text-gray-800 mb-3">
+              Registration Summary
+            </h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="font-medium text-gray-600">Student:</span>
-                <div className="text-gray-900 font-semibold">{studentData.studentName}</div>
+                <div className="text-gray-900 font-semibold">
+                  {studentData.studentName}
+                </div>
               </div>
               <div>
                 <span className="font-medium text-gray-600">Email:</span>
@@ -207,11 +220,15 @@ Receipt ID: ${receiptId}`);
               </div>
               <div>
                 <span className="font-medium text-gray-600">Course:</span>
-                <div className="text-gray-900">{selectedCourse?.courseName || 'N/A'}</div>
+                <div className="text-gray-900">
+                  {selectedCourse?.courseName || "N/A"}
+                </div>
               </div>
               <div>
                 <span className="font-medium text-gray-600">Batch:</span>
-                <div className="text-gray-900">{selectedBatch?.batchName || 'N/A'}</div>
+                <div className="text-gray-900">
+                  {selectedBatch?.batchName || "N/A"}
+                </div>
               </div>
             </div>
           </div>
@@ -220,15 +237,19 @@ Receipt ID: ${receiptId}`);
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
             <div className="flex justify-between items-center">
               <div>
-                <div className="text-sm text-gray-600 mb-1">Total Course Fees</div>
+                <div className="text-sm text-gray-600 mb-1">
+                  Total Course Fees
+                </div>
                 <div className="text-3xl font-bold text-green-700">
-                  ₹{courseFees.toLocaleString('en-IN')}
+                  ₹{courseFees.toLocaleString("en-IN")}
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">Minimum Payment</div>
+                <div className="text-sm text-gray-600 mb-1">
+                  Minimum Payment
+                </div>
                 <div className="text-2xl font-semibold text-orange-600">
-                  ₹{minimumPayment.toLocaleString('en-IN')}
+                  ₹{minimumPayment.toLocaleString("en-IN")}
                 </div>
               </div>
             </div>
@@ -240,7 +261,10 @@ Receipt ID: ${receiptId}`);
           {/* Error Display */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex items-start gap-3">
-              <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+              <AlertCircle
+                className="text-red-600 flex-shrink-0 mt-0.5"
+                size={20}
+              />
               <div className="text-sm text-red-800">{error}</div>
             </div>
           )}
@@ -258,7 +282,9 @@ Receipt ID: ${receiptId}`);
                 <input
                   type="number"
                   value={paymentData.paymentAmount}
-                  onChange={(e) => handleChange('paymentAmount', e.target.value)}
+                  onChange={(e) =>
+                    handleChange("paymentAmount", e.target.value)
+                  }
                   className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-lg font-semibold"
                   placeholder={`Enter amount (min ₹${minimumPayment})`}
                   min={minimumPayment}
@@ -278,12 +304,12 @@ Receipt ID: ${receiptId}`);
               </label>
               <select
                 value={paymentData.paymentTypeId}
-                onChange={(e) => handleChange('paymentTypeId', e.target.value)}
+                onChange={(e) => handleChange("paymentTypeId", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                 disabled={loading}
               >
                 <option value="">Select payment method</option>
-                {PAYMENT_TYPES.map(type => (
+                {PAYMENT_TYPES.map((type) => (
                   <option key={type.id} value={type.id}>
                     {type.name}
                   </option>
@@ -291,20 +317,22 @@ Receipt ID: ${receiptId}`);
               </select>
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Transaction Reference (Optional)
               </label>
               <input
                 type="text"
                 value={paymentData.transactionReference}
-                onChange={(e) => handleChange('transactionReference', e.target.value)}
+                onChange={(e) =>
+                  handleChange("transactionReference", e.target.value)
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                 placeholder="e.g., Cheque No., Transaction ID, etc."
                 maxLength="100"
                 disabled={loading}
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -312,7 +340,7 @@ Receipt ID: ${receiptId}`);
               </label>
               <textarea
                 value={paymentData.remarks}
-                onChange={(e) => handleChange('remarks', e.target.value)}
+                onChange={(e) => handleChange("remarks", e.target.value)}
                 rows="2"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                 placeholder="Any additional notes..."
@@ -323,16 +351,20 @@ Receipt ID: ${receiptId}`);
           </div>
 
           {/* Info Box */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h4 className="font-semibold text-blue-900 mb-2">What happens next?</h4>
+          {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <h4 className="font-semibold text-blue-900 mb-2">
+              What happens next?
+            </h4>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>✅ Student account will be created</li>
               <li>✅ Payment will be recorded</li>
               <li>✅ Receipt will be generated with payment history</li>
               <li>✅ Receipt PDF will be sent to {studentData.studentEmail}</li>
-              {studentData.enquiryId && <li>✅ Enquiry will be marked as converted</li>}
+              {studentData.enquiryId && (
+                <li>✅ Enquiry will be marked as converted</li>
+              )}
             </ul>
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="flex gap-3 mt-6 pt-4 border-t">
@@ -354,7 +386,7 @@ Receipt ID: ${receiptId}`);
                   Processing...
                 </span>
               ) : (
-                `Pay ₹${paymentData.paymentAmount || '0'} & Register`
+                `Pay ₹${paymentData.paymentAmount || "0"} & Register`
               )}
             </button>
           </div>

@@ -57,6 +57,11 @@ const courseService = {
 
     return response.data;
   },
+
+  getCourseNameById: async (id) => {
+    const res = await api.get(`/courses/name/${id}`);
+    return res.data.courseName;
+  },
 };
 
 export default courseService;
