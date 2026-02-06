@@ -62,6 +62,11 @@ const batchService = {
 
     return response.data;
   },
+
+  getBatchNameById: async (id) => {
+    const res = await api.get(`/batches/name/${id}`);
+    return res.data;
+  },
 };
 
 export default batchService;
